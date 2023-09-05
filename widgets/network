@@ -1,25 +1,30 @@
-#!/usr/bin/env bash
+#!/bin/bash
+set -euo pipefail
 
-#  network:
-#    public ip    215.105.10.10
-#    private ip   192.168.1.10
+# Print network information.
+# All local interafces and IPs, public IP, hostname.
+# Run it to see what it looks like.
 
-date=$(date +%Y%m%d)
-data='../data/network'
-domain='myip.opendns.com'
+toolPath=$(realpath "$(dirname "$0")/../tools")
+source "${toolPath}/colors.sh"
+dataPath=$(realpath "$(dirname "$0")/../data")
 
-[[ -r "${data}" ]] && source "${data}"
-if [[ "${lastupdate}" != "${date}" ]]; then
-    privateip=$(ip route get 1.2.3.4 | awk '/^1.2.3.4/ {print $7}')
-    publicip=$(dig +short -4 myip.opendns.com @resolver1.opendns.com)
-    echo "lastupdate=${date}"     >  "${data}"
-    echo "publicip=${publicip}"   >> "${data}"
-    echo "privateip=${privateip}" >> "${data}"
+# public IP
+stamp="${dataPath}/network-public-ip"
+if [ -z "$(find "$stamp" -newermt 'now -1 day' 2>/dev/null)" ]; then
+    # cache too old
+    publicIp=$(dig +short -4 myip.opendns.com @resolver1.opendns.com)
+    echo "${publicIp}" >"${stamp}"
+else
+    # cache fresh
+    publicIp=$(cat "$stamp")
 fi
-out=''
-out+="public ip|${publicip}\n"
-out+="private ip|${privateip}\n"
 
-echo
+ips=$(ip -oneline addr show | awk '{print $1" " $2" "$4}' | cut -c 4- | grep -Ev " fe80:|^lo ")
+publicIp="public $publicIp"
+
+message="$ips\n$publicIp"
+
 echo 'network:'
-echo -e "${out}" | column -ts'|' | sed 's,^,  ,'
+echo -e "$message" | column -ts' ' | sed 's,^,  ,'
+echo "  hostname: $(uname -n)"
