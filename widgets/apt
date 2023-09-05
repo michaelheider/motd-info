@@ -1,23 +1,46 @@
-#!/usr/bin/env bash
+#!/bin/bash
+set -euo pipefail
 
-#  packages:
-#    3 new packages available...
+# Print overview of updates via `apt` and whether a restart is required.
+# Run it to see what it looks like.
 
-date=$(date +%Y%m%d)
-data='../data/apt'
+toolPath=$(realpath "$(dirname "$0")/../tools")
+source "${toolPath}/colors.sh"
+dataPath=$(realpath "$(dirname "$0")/../data")
 
-[[ -r "${data}" ]] && source "${data}"
-if [[ "${lastupdate}" != "${date}" ]]; then
-    source ../tools/colors.sh
-    if [[ "${USER}" == "root" ]]; then
-        apt-get -qqq update
-    fi
-    pkgs=$(apt -qq list --upgradable 2>/dev/null | wc -l)
-    pkgs=$(c_if_r "${pkgs}" '<' '1' 'no new package' "${pkgs} new packages")
-    echo "lastupdate=${date}" >  "${data}"
-    echo "pkgs='${pkgs}'"     >> "${data}"
+# updates
+stamp="${dataPath}/apt"
+if [ -z "$(find "$stamp" -newermt 'now - 3 days' | grep -m 1 '.')" ]; then
+	# cache too old
+	if [[ "${USER}" == "root" ]]; then
+		echo "running apt update..."
+		apt-get -qq update
+		echo -e "$oneLineUp$clearLine$oneLineUp"
+		know=1
+		touch "$stamp"
+	else
+		know=0
+	fi
+else
+	# apt is cached
+	know=1
+fi
+nrPackages=$(apt -qq list --upgradable 2>/dev/null | wc -l)
+nrPackagesSecurity=$(apt -qq list --upgradable 2>/dev/null | { grep -c "\-security" || test $? = 1; })
+if [ "$know" -eq 1 ]; then
+	updatesMessage=$(c_if_r "${nrPackages}" '<' '1' 'no upgrades' "${nrPackages} upgrades, ${nrPackagesSecurity} security")
+else
+	updatesMessage="${bred}run \`apt update\`${reset}"
 fi
 
-echo
+# reboot required
+if [ -f "/run/reboot-required" ]; then
+	rebootMessage="${bred}reboot required${reset}"
+else
+	# keep same number of lines
+	rebootMessage=""
+fi
+
 echo 'packages:'
-echo -e "  ${pkgs} available..."
+echo -e "  $updatesMessage"
+echo -e "  $rebootMessage"
