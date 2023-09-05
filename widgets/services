@@ -1,25 +1,25 @@
 #!/bin/bash
 set -euo pipefail
 
-#  services:
-#    apparmor   active    cron  active
-#    logrotate  inactive  lxc   active
-#    network    active    sshd  active
+# Print status of services.
+# Run it to see what it looks like.
 
-columns=2
+# config
+columns=2 # fills row-major
 services=('rsyslog' 'cron' 'logrotate.timer' 'sshd' 'networking')
-svc_names=('syslog' 'cron' 'logrotate' 'sshd' 'network')
+servicesDisplayNames=('syslog' 'cron' 'logrotate' 'sshd' 'network')
+
+toolPath=$(realpath "$(dirname "$0")/../tools")
+source "${toolPath}/colors.sh"
 
 out=''
-source ../tools/colors.sh
 for i in "${!services[@]}"; do
-	svc_status=$(systemctl is-active "${services[i]}") || true
-	svc_status=$(c_match "${svc_status}" 'active')
-	out+="${svc_names[$i]}|${svc_status}|"
-	(($(((i + 1) % columns)) == 0)) && out+='\n'
+	serviceStatus=$(systemctl is-active "${services[i]}") || true
+	serviceStatus=$(c_match "${serviceStatus}" 'active')
+	out+="${servicesDisplayNames[$i]}|${serviceStatus}|"
+	((((i + 1) % columns) == 0)) && out+='\n'
 done
 out+='\n'
 
-echo
 echo 'services:'
 echo -e "${out}" | column -ts '|' | sed -e 's/^/  /'
