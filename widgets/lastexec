@@ -1,8 +1,9 @@
-#!/usr/bin/env bash
+#!/bin/bash
+set -euo pipefail
 
-#  last execution:
-#    Tuesday 18 February, 21:33:31
+# Prints the current time, i.e. the time of execution.
+# Run it to see what it looks like.
 
-echo
-echo "last execution:"
-LC_ALL=en_EN.utf8 date +"%A %d %B, %H:%M:%S" | sed 's,^,  ,'
+echo "executed (UTC):"
+echo -n "  "
+date --utc +"%Y-%m-%d %H:%M:%S"
