@@ -1,41 +1,47 @@
-#!/usr/bin/env bash
+#!/bin/bash
+set -euo pipefail
 
-#  system info:
-#    system load   0.01  process  120
-#    cpu usage     5%    uptime   30d
-#    memory usage  10%   users    1
-#    temperature   45°c
+# Print system info.
+# Run it to see what it looks like.
 
-mem_warn=50  # %
+# cutoff values
 cpu_warn=20  # %
-temp_warn=60 # °c
+mem_warn=50  # %
+swap_warn=50 # %
+temp_warn=60 # °C
 
-ps="$(ps --ppid 2 -p 2 --deselect | wc -l)"
-load="$(cat /proc/loadavg | cut -d' ' -f3)"
+toolPath=$(realpath "$(dirname "$0")/../tools")
+source "${toolPath}/colors.sh"
+
+processes="$(ps --ppid 2 -p 2 --deselect | wc -l)"
+load="$(cut -d' ' -f3 </proc/loadavg)"
 users="$(w -h | wc -l)"
-up="$(( $(cat /proc/uptime | cut -d'.' -f1) / 3600 / 24 ))"
+uptime="$(($(cut -d'.' -f1 </proc/uptime) / 3600 / 24))"
 mem="$(free -b | awk 'FNR == 2 {p=100*$3/$2} END{printf("%0.f",p)}')"
-cpunb="$(grep -i '^processor' /proc/cpuinfo | wc -l)"
-cpu="$(../tools/cpu.sh)"
-kern="v$(uname -r | cut -d'.' -f1-2)"
-
-source ../tools/colors.sh
-#ps=$(c_if "${ps}" '<' '150')
-mem=$(c_if  "${mem}"  '<' "${mem_warn}" '%')
-load=$(c_if "${load}" '<' "$cpunb")
-cpu=$(c_if  "${cpu}"  '<' "${cpu_warn}" '%')
-
-out+="system load|${load}|tasks|${ps}\n"
-out+="cpu usage|${cpu}|uptime|${up}d\n"
-out+="memory usage|${mem}|users|${users}\n"
-
+swap="$(free -b | awk 'FNR == 3 {p=100*$3/$2} END{printf("%0.f",p)}')"
+cores="$(grep -c '^processor' /proc/cpuinfo)"
+cpu="$("${toolPath}/cpu.sh")"
 if [[ -f '/sys/class/thermal/thermal_zone0/temp' ]]; then
-    temp="$(( $(cat /sys/class/thermal/thermal_zone0/temp) / 1000 ))"
-    temp=$(c_if "${temp}" '<' "${temp_warn}" '°c')
-    out+="temperature|${temp}|"
+	temp="$(($(cat /sys/class/thermal/thermal_zone0/temp) / 1000))"
+else
+	temp="?"
 fi
-out+="kernel|${kern}\n"
+
+cpu=$(c_if "${cpu}" '<' "${cpu_warn}" '%')
+mem=$(c_if "${mem}" '<' "${mem_warn}" '%')
+swap=$(c_if "${swap}" '<' "${swap_warn}" '%')
+temp=$(c_if "${temp}" '<' "${temp_warn}" '°C')
+load=$(c_if "${load}" '<' "$cores")
+#processes=$(c_if "${processes}" '<' '150')
+
+table=""
+table+="system load|${load}|processes|${processes}\n"
+table+="CPU|${cpu}|uptime|${uptime}d\n"
+table+="memory|${mem}|swap|${swap}\n"
+table+="temp|${temp}|users online|${users}\n"
 
 echo
 echo 'system info:'
-echo -e "${out}" | column -ts'|' | sed 's,^,  ,'
+echo -e "${table}" | column -ts'|' | sed 's,^,  ,'
+echo -n '  '
+uname -srm
