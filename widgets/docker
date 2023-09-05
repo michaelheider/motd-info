@@ -1,26 +1,34 @@
-#!/usr/bin/env bash
+#!/bin/bash
+set -euo pipefail
 
-# docker containers:
-#  alpine  exited  nginx  up
-#  blog    exited  git    up
+# Print status of services.
+# Run it to see what it looks like.
 
+# config
 columns=2
-filter='nothing'  # excluded containers separated by |
+filter='' # excluded containers separated by |
+
+toolPath=$(realpath "$(dirname "$0")/../tools")
+source "${toolPath}/colors.sh"
+
+if ! "${toolPath}/package-check.sh" docker; then
+	echo "docker not installed"
+	exit 0
+fi
+
 mapfile -t containers < <(docker ps -a --format "{{.Names}} {{.Status}}" | awk '!/^('${filter}')/{print $1,$2}')
 
 out=''
-source ../tools/colors.sh
 for i in "${!containers[@]}"; do
-    IFS=" " read name status <<< "${containers[$i]}"
-    status=$(c_match "${status}" 'Up')
-    out+="${name}|${status,,}|"
-    (( $(( (i+1) % columns )) == 0 )) && out+='\n'
+	IFS=" " read -r name status <<<"${containers[$i]}"
+	status=$(c_match "${status}" 'Up')
+	out+="${name}|${status,,}|"
+	(($(((i + 1) % columns)) == 0)) && out+='\n'
 done
 if [[ -z "${out}" ]]; then
-    out='none'
+	out='none'
 fi
 out+='\n'
 
-echo
 echo 'docker containers:'
 echo -e "${out}" | column -ts '|' | sed -e 's/^/  /'
