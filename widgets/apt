@@ -32,7 +32,7 @@ fi
 if [ "$cacheFresh" -eq 1 ]; then
 	nrPackages=$(apt -qq list --upgradable 2>/dev/null | wc -l)
 	nrPackagesSecurity=$(apt -qq list --upgradable 2>/dev/null | { grep -c "\-security" || test $? = 1; })
-	updatesMessage=$(c_if_r "${nrPackages}" '<' '1' 'no upgrades' "${nrPackages} upgrades, ${nrPackagesSecurity} security")
+	updatesMessage=$(colorIfCustom "${nrPackages}" '<' '1' 'no upgrades' "${nrPackages} upgrades, ${nrPackagesSecurity} security")
 else
 	updatesMessage="${badColor}run \`apt update\`${reset}"
 fi

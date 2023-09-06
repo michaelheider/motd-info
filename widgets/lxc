@@ -21,7 +21,7 @@ mapfile -t containers < <(lxc-ls -f | awk '!/^('${filter}')/{print $1,$2}' | sed
 out=''
 for i in "${!containers[@]}"; do
 	IFS=" " read -r name status <<<"${containers[$i]}"
-	status=$(c_match "${status}" 'RUNNING')
+	status=$(colorMatch "${status}" 'RUNNING')
 	out+="${name}|${status,,}|"
 	(($(((i + 1) % columns)) == 0)) && out+='\n'
 done

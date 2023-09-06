@@ -46,15 +46,15 @@ for disk in "${disks[@]}"; do
 	t1="$(echo "${smart}" | awk '/Temperature_Celsius/ {print $10}')"
 	t2="$(echo "${smart}" | awk '/Airflow_Temperature_Cel/ {print $10}')"
 	temp=$((t1 > t2 ? t1 : t2))
-	temp="$(c_if "${temp}" '<' "${tempWarn}" '°')"
+	temp="$(colorIf "${temp}" '<' "${tempWarn}" '°')"
 	# load cycle count
 	cycle="$(echo "${smart}" | awk '/Load_Cycle_Count/ {print $10}')"
-	[[ -n "${cycle}" ]] && cycle="$(c_if $((cycle / 1000)) '<' "${loadCycleWarn}" 'k')" || cycle='.'
+	[[ -n "${cycle}" ]] && cycle="$(colorIf $((cycle / 1000)) '<' "${loadCycleWarn}" 'k')" || cycle='.'
 	# reallocated sector count
 	sect="$(echo "${smart}" | awk '/Reallocated_Sector_Ct/ {print $10}')"
 	# status
 	status="$(echo "${smart}" | awk '/SMART overall-health self-assessment test result:/ {print $6}')"
-	status="$(c_match "${status}" 'PASSED')"
+	status="$(colorMatch "${status}" 'PASSED')"
 	# output
 	out+="${disk##*/}|${status}|${age}|${temp}|${cycle}|${sect}\n"
 done

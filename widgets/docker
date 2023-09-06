@@ -21,7 +21,7 @@ mapfile -t containers < <(docker ps -a --format "{{.Names}} {{.Status}}" | awk '
 out=''
 for i in "${!containers[@]}"; do
 	IFS=" " read -r name status <<<"${containers[$i]}"
-	status=$(c_match "${status}" 'Up')
+	status=$(colorMatch "${status}" 'Up')
 	out+="${name}|${status,,}|"
 	(($(((i + 1) % columns)) == 0)) && out+='\n'
 done

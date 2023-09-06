@@ -4,7 +4,7 @@ set -euo pipefail
 # Print system info.
 # Run it to see what it looks like.
 
-# cutoff values
+# config: cutoff values
 cpuWarn=30  # %
 memWarn=50  # %
 swapWarn=50 # %
@@ -27,12 +27,11 @@ else
 	temp="?"
 fi
 
-cpu=$(c_if "${cpu}" '<' "${cpuWarn}" '%')
-mem=$(c_if "${mem}" '<' "${memWarn}" '%')
-swap=$(c_if "${swap}" '<' "${swapWarn}" '%')
-temp=$(c_if "${temp}" '<' "${tempWarn}" '°C')
-load=$(c_if "${load}" '<' "$cores")
-#processes=$(c_if "${processes}" '<' '150')
+cpu=$(colorIf "${cpu}" '<' "${cpuWarn}" '%')
+mem=$(colorIf "${mem}" '<' "${memWarn}" '%')
+swap=$(colorIf "${swap}" '<' "${swapWarn}" '%')
+temp=$(colorIf "${temp}" '<' "${tempWarn}" '°C')
+load=$(colorIf "${load}" '<' "$cores")
 
 table=''
 table+="system load|${load}|processes|${processes}\n"

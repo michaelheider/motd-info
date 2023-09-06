@@ -38,7 +38,7 @@ infoColor=$yellow
 
 
 # c_if '2' '<' '5' '%'
-c_if(){
+colorIf(){
 	if (( "${1%%.*}" "$2" "${3%%.*}" )); then
 		echo "${goodColor}$1${*:4}${reset}"
 	else
@@ -47,7 +47,7 @@ c_if(){
 }
 
 # c_if '2' '<' '5' 'r1' 'r2'adamshand
-c_if_r(){
+colorIfCustom(){
 	if (( "${1%%.*}" "$2" "${3%%.*}" )); then
 		echo "${goodColor}${4}${reset}"
 	else
@@ -56,7 +56,7 @@ c_if_r(){
 }
 
 # c_match 'abc' 'def' 'pkgs'
-c_match(){
+colorMatch(){
 	if [[ "${1%%.*}" = "${2%%.*}" ]]; then
 		echo "${goodColor}$1${*:3}${reset}"
 	else
@@ -65,7 +65,7 @@ c_match(){
 }
 
 # c_match_r 'abc' 'def' 'r1' 'r2'
-c_match_r(){
+colorMatchCustom(){
 	if [[ "${1%%.*}" = "${2%%.*}" ]]; then
 		echo "${goodColor}${3}${reset}"
 	else

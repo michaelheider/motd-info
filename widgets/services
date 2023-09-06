@@ -15,7 +15,7 @@ source "${toolPath}/colors.sh"
 out=''
 for i in "${!services[@]}"; do
 	serviceStatus=$(systemctl is-active "${services[i]}") || true
-	serviceStatus=$(c_match "${serviceStatus}" 'active')
+	serviceStatus=$(colorMatch "${serviceStatus}" 'active')
 	out+="${servicesDisplayNames[$i]}|${serviceStatus}|"
 	((((i + 1) % columns) == 0)) && out+='\n'
 done

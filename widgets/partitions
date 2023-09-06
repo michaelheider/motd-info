@@ -20,7 +20,7 @@ out=" |Size|Use%\n"
 for line in "${partitions[@]}"; do
     IFS=" " read -r device fstype size used available percent target <<<"${line}"
     percentnb=${percent//%/}
-    percent=$(c_if "${percentnb}" '<' "${partitionWarn}" '%')
+    percent=$(colorIf "${percentnb}" '<' "${partitionWarn}" '%')
     out+="${target}|${size}|${percent}\n"
 done
 
