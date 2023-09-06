@@ -1,35 +1,33 @@
-#!/usr/bin/env bash
+#!/bin/bash
+set -euo pipefail
 
 # go to script dir
 cd "$(dirname "$(readlink -f "$0")")"
 
 # create data dir
 if ! [[ -d "$(pwd)/data" ]]; then
-    mkdir "$(pwd)/data"
+	mkdir "$(pwd)/data"
 fi
-# remove old data
-if [[ $1 == '-f' ]]; then
-    rm -f "$(pwd)/data"/*
-fi
-
-# print header
-cat headers/*
 
 # get widgets results
 cd widgets
 col=$(grep 'col=' ../config | sed 's/.*col=//')
 # execute widgets in columns
+f=()
 for i in $(seq 1 "${col}"); do
-    for w in $(awk '!/^#/ {print $'$i'}' ../config); do
-        # append content
-        [ -e "${w}" ] && f[$i]="${f[$i]} $(./${w})\n"
-    done
+	f[i]=""
+	for w in $(awk '!/^#/ {print $'$i'}' ../config); do
+		if [ -e "${w}" ]; then
+			f[i]+=""
+			f[i]+="$(./"${w}")\n\n"
+		fi
+	done
 done
 
 # print
 motd=''
 for c in "${f[@]}"; do
-    [[ -z ${motd} ]] && motd="${c}" || motd=$(paste <(echo -e "${motd}") <(echo -e "${c}") -d'@')
+	[[ -z ${motd} ]] && motd="${c}" || motd=$(paste <(echo -e "${motd}") <(echo -e "${c}") -d'@')
 done
-echo -e "${motd}"| sed 's,@, @ ,' | column -ts '@'
-
+motd=${motd::-3} # remove trailing newlines
+echo -e "${motd}" | sed 's,@, @ ,' | column -ts '@'

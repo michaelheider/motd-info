@@ -10,9 +10,9 @@ dataPath=$(realpath "$(dirname "$0")/../data")
 
 # updates
 stamp="${dataPath}/apt"
-if [ -z "$(find "$stamp" -newermt 'now - 3 days' | grep -m 1 '.')" ]; then
+if [ -z "$(find "$stamp" -newermt 'now -3 days' 2>/dev/null)" ]; then
 	# cache too old
-	if [[ "${USER}" == "root" ]]; then
+	if [[ "$USER" == "root" ]]; then
 		echo "running apt update..."
 		apt-get -qq update
 		echo -e "$oneLineUp$clearLine$oneLineUp"

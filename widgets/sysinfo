@@ -5,10 +5,10 @@ set -euo pipefail
 # Run it to see what it looks like.
 
 # cutoff values
-cpu_warn=20  # %
-mem_warn=50  # %
-swap_warn=50 # %
-temp_warn=60 # °C
+cpuWarn=30  # %
+memWarn=50  # %
+swapWarn=50 # %
+tempWarn=60 # °C
 
 toolPath=$(realpath "$(dirname "$0")/../tools")
 source "${toolPath}/colors.sh"
@@ -27,21 +27,18 @@ else
 	temp="?"
 fi
 
-cpu=$(c_if "${cpu}" '<' "${cpu_warn}" '%')
-mem=$(c_if "${mem}" '<' "${mem_warn}" '%')
-swap=$(c_if "${swap}" '<' "${swap_warn}" '%')
-temp=$(c_if "${temp}" '<' "${temp_warn}" '°C')
+cpu=$(c_if "${cpu}" '<' "${cpuWarn}" '%')
+mem=$(c_if "${mem}" '<' "${memWarn}" '%')
+swap=$(c_if "${swap}" '<' "${swapWarn}" '%')
+temp=$(c_if "${temp}" '<' "${tempWarn}" '°C')
 load=$(c_if "${load}" '<' "$cores")
 #processes=$(c_if "${processes}" '<' '150')
 
-table=""
+table=''
 table+="system load|${load}|processes|${processes}\n"
 table+="CPU|${cpu}|uptime|${uptime}d\n"
 table+="memory|${mem}|swap|${swap}\n"
-table+="temp|${temp}|users online|${users}\n"
+table+="temp|${temp}|users now|${users}\n"
 
-echo
 echo 'system info:'
 echo -e "${table}" | column -ts'|' | sed 's,^,  ,'
-echo -n '  '
-uname -srm
