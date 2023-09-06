@@ -4,43 +4,43 @@ set -euo pipefail
 # Print overview of updates via `apt` and whether a restart is required.
 # Run it to see what it looks like.
 
+# config
+APT_CACHE_MAX_AGE="3days"
+
 toolPath=$(realpath "$(dirname "$0")/../tools")
 source "${toolPath}/colors.sh"
-dataPath=$(realpath "$(dirname "$0")/../data")
 
-# updates
-stamp="${dataPath}/apt"
-if [ -z "$(find "$stamp" -newermt 'now -3 days' 2>/dev/null)" ]; then
-	# cache too old
-	if [[ "$USER" == "root" ]]; then
-		echo "running apt update..."
-		apt-get -qq update
-		echo -e "$oneLineUp$clearLine$oneLineUp"
-		know=1
-		touch "$stamp"
-	else
-		know=0
-	fi
-else
-	# apt is cached
-	know=1
+# get latest execution time of `apt update`
+# how Ansible does it
+# https://github.com/ansible/ansible/blob/devel/lib/ansible/modules/apt.py#L1151C14-L1151C14 (2023-09-06)
+APT_UPDATE_SUCCESS_STAMP_PATH="/var/lib/apt/periodic/update-success-stamp"
+APT_LISTS_PATH="/var/lib/apt/lists"
+cacheFresh=0
+if [ -n "$(find -H "$APT_UPDATE_SUCCESS_STAMP_PATH" -newermt "now -$APT_CACHE_MAX_AGE" 2>/dev/null)" ]; then
+	cacheFresh=1
+elif [ -n "$(find -H "$APT_LISTS_PATH" -maxdepth 0 -newermt "now -$APT_CACHE_MAX_AGE" 2>/dev/null)" ]; then
+	cacheFresh=1
 fi
-nrPackages=$(apt -qq list --upgradable 2>/dev/null | wc -l)
-nrPackagesSecurity=$(apt -qq list --upgradable 2>/dev/null | { grep -c "\-security" || test $? = 1; })
-if [ "$know" -eq 1 ]; then
+# update if we are root
+if [ "$cacheFresh" -eq 0 ] && [[ "$USER" == "root" ]]; then
+	echo "running apt update..." >&2
+	apt-get -qq update
+	echo -e "$oneLineUp$clearLine$oneLineUp" >&2 # clear previous message
+	cacheFresh=1
+fi
+# assemble message
+if [ "$cacheFresh" -eq 1 ]; then
+	nrPackages=$(apt -qq list --upgradable 2>/dev/null | wc -l)
+	nrPackagesSecurity=$(apt -qq list --upgradable 2>/dev/null | { grep -c "\-security" || test $? = 1; })
 	updatesMessage=$(c_if_r "${nrPackages}" '<' '1' 'no upgrades' "${nrPackages} upgrades, ${nrPackagesSecurity} security")
 else
 	updatesMessage="${bred}run \`apt update\`${reset}"
 fi
 
-# reboot required
-if [ -f "/run/reboot-required" ]; then
-	rebootMessage="${bred}reboot required${reset}"
-else
-	# keep same number of lines
-	rebootMessage=""
-fi
-
+# print
 echo 'packages:'
 echo -e "  $updatesMessage"
-echo -e "  $rebootMessage"
+if [ -f "/run/reboot-required" ]; then
+	# reboot required
+	echo -e "  ${bred}reboot required${reset}"
+fi
