@@ -12,7 +12,7 @@ toolPath=$(realpath "$(dirname "$0")/../tools")
 source "${toolPath}/colors.sh"
 
 if ! "${toolPath}/package-check.sh" docker; then
-	echo "docker not installed"
+	echo -e "${infoColor}docker not installed${reset}"
 	exit 0
 fi
 

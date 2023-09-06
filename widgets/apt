@@ -34,7 +34,7 @@ if [ "$cacheFresh" -eq 1 ]; then
 	nrPackagesSecurity=$(apt -qq list --upgradable 2>/dev/null | { grep -c "\-security" || test $? = 1; })
 	updatesMessage=$(c_if_r "${nrPackages}" '<' '1' 'no upgrades' "${nrPackages} upgrades, ${nrPackagesSecurity} security")
 else
-	updatesMessage="${bred}run \`apt update\`${reset}"
+	updatesMessage="${badColor}run \`apt update\`${reset}"
 fi
 
 # print
@@ -42,5 +42,5 @@ echo 'packages:'
 echo -e "  $updatesMessage"
 if [ -f "/run/reboot-required" ]; then
 	# reboot required
-	echo -e "  ${bred}reboot required${reset}"
+	echo -e "  ${badColor}reboot required${reset}"
 fi

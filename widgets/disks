@@ -15,14 +15,14 @@ toolPath=$(realpath "$(dirname "$0")/../tools")
 source "${toolPath}/colors.sh"
 
 if [[ "$USER" != "root" ]]; then
-	echo "disk health needs root"
+	echo -e "${infoColor}disk health needs root${reset}"
 	exit 0
 fi
 
 mapfile -t disks < <(lsblk -Spno KNAME)
 if [ ${#disks[@]} -eq 0 ]; then
 	# no disk supports SMART
-	echo "no disk health info"
+	echo -e "${infoColor}no disk health info${reset}"
 	exit 0
 fi
 out=" |Status|Pwr|Temp|Cycl|Real\n"
@@ -34,9 +34,9 @@ for disk in "${disks[@]}"; do
 		ageY="$(bc -l <<<"scale=1; $((ageH / 24))/365")"
 		ageY=$(printf '%3.1f\n' "$ageY") # ensure leading 0
 		if [ "$(bc -l <<<"$ageY < $powerOnWarn")" -eq 1 ]; then
-			color=$bgreen
+			color=$goodColor
 		else
-			color=$bred
+			color=$badColor
 		fi
 		age="${color}${ageY}y${reset}"
 	else

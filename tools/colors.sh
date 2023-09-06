@@ -31,39 +31,44 @@ clearLine="\e[K"
 oneLineUp="\e[1A" # can replace 1 with a higher integer
 twoLinesUp="\e[2A"
 
+# semantic colors
+goodColor=$green
+badColor=$bred
+infoColor=$yellow
+
 
 # c_if '2' '<' '5' '%'
 c_if(){
 	if (( "${1%%.*}" "$2" "${3%%.*}" )); then
-		echo "${bgreen}$1${*:4}${reset}"
+		echo "${goodColor}$1${*:4}${reset}"
 	else
-		echo "${bred}$1${*:4}${reset}"
+		echo "${badColor}$1${*:4}${reset}"
 	fi
 }
 
 # c_if '2' '<' '5' 'r1' 'r2'adamshand
 c_if_r(){
 	if (( "${1%%.*}" "$2" "${3%%.*}" )); then
-		echo "${bgreen}${4}${reset}"
+		echo "${goodColor}${4}${reset}"
 	else
-		echo "${bred}${5}${reset}"
+		echo "${badColor}${5}${reset}"
 	fi
 }
 
 # c_match 'abc' 'def' 'pkgs'
 c_match(){
 	if [[ "${1%%.*}" = "${2%%.*}" ]]; then
-		echo "${bgreen}$1${*:3}${reset}"
+		echo "${goodColor}$1${*:3}${reset}"
 	else
-		echo "${bred}$1${*:3}${reset}"
+		echo "${badColor}$1${*:3}${reset}"
 	fi
 }
 
 # c_match_r 'abc' 'def' 'r1' 'r2'
 c_match_r(){
 	if [[ "${1%%.*}" = "${2%%.*}" ]]; then
-		echo "${bgreen}${3}${reset}"
+		echo "${goodColor}${3}${reset}"
 	else
-		echo "${bred}${4}${reset}"
+		echo "${badColor}${4}${reset}"
 	fi
 }
