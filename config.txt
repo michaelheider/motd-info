@@ -1,0 +1,11 @@
+# Widget layout configuration, avalaible widgets:
+#   see widgets folder, every file is a widget.
+# For widget configuration, edit widget files.
+#
+# number of columns:
+# col=2
+
+sysinfo   network
+disks     partitions
+services  apt
+os        lastexec
