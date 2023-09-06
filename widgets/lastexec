@@ -4,6 +4,4 @@ set -euo pipefail
 # Prints the current time, i.e. the time of execution.
 # Run it to see what it looks like.
 
-echo "executed (UTC):"
-echo -n "  "
-date --utc +"%Y-%m-%d %H:%M:%S"
+echo "info as of: $(date --utc +"%Y-%m-%d %H:%M:%S") UTC"
