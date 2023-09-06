@@ -11,7 +11,7 @@ source "${toolPath}/colors.sh"
 
 cols=$(grep 'col=' "$configPath" | sed 's/.*col=//')
 
-# execute widgets in columns
+# execute widgets
 f=()
 for i in $(seq 1 "$cols"); do
 	f[i]=""
