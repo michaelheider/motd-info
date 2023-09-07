@@ -35,10 +35,10 @@ temp=$(colorIf "${temp}" '<' "${tempWarn}" '°C')
 load=$(colorIf "${load}" '<' "$cores")
 
 table=''
-table+="system load|${load}|processes|${processes}\n"
-table+="CPU|${cpu}|uptime|${uptime}d\n"
-table+="memory|${mem}|swap|${swap}\n"
+table+="CPU|${cpu}|sys load|${load}\n"
+table+="memory|${mem}|processes|${processes}\n"
+table+="swap|${swap}|uptime|${uptime}d\n"
 table+="temp|${temp}|users now|${users}\n"
 
 echo 'system info:'
-echo -e "${table}" | column -ts'|' | sed 's,^,  ,'
+echo -e "${table}" | column -ts'|' -R "2,4" | sed 's,^,  ,'

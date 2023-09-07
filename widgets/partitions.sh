@@ -7,7 +7,7 @@ LANG=en_US.UTF-8
 
 # config
 partitionWarn=80 # %
-filter=''   # excluded targets separated by |
+filter=''        # excluded targets separated by |
 
 toolPath=$(realpath "$(dirname "$0")/../tools")
 source "${toolPath}/colors.sh"
@@ -26,4 +26,4 @@ for line in "${partitions[@]}"; do
 done
 
 echo 'partitions usage:'
-echo -e "${out}" | column -ts'|' | sed 's,^,  ,'
+echo -e "${out}" | column -ts'|' -R "2,3" | sed 's,^,  ,'

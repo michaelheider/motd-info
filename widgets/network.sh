@@ -24,15 +24,15 @@ getPublicIp() {
 		case $status in
 		124 | 137)
 			# timeout 124: terminated, timeout 137: killed
-			ip="${infoColor}timeout${reset}"
+			ip="${infoColor}IPv${1} timeout${reset}"
 			;;
 		6)
 			# curl 6: could not resolve host
-			ip="${infoColor}DNS failed${reset}"
+			ip="${infoColor}IPv${1} DNS failed${reset}"
 			;;
 		7)
 			# curl 7: failed to connect to host
-			ip="${infoColor}conn failed${reset}"
+			ip="${infoColor}IPv${1} conn failed${reset}"
 			;;
 		*)
 			# should never happen
@@ -54,10 +54,10 @@ localIps=${localIps// /|}
 
 # assemble message (as table)
 message="$localIps\n"
-message+="public4|$publicIp4\n"
-message+="public6|$publicIp6\n"
+message+="pub|$publicIp4\n"
+message+="pub|$publicIp6\n"
+message+="host|$(uname -n)\n"
 
 # output
 echo 'network:'
 echo -e "$message" | column -ts'|' | sed 's,^,  ,'
-echo "  hostname $(uname -n)"
