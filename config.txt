@@ -1,11 +1,15 @@
 # Widget layout configuration, avalaible widgets:
 #   see widgets folder, every file is a widget.
-# For widget configuration, edit widget files.
 # Specify widget names without ".sh".
+# Use '-' as placeholder for no widget.
+#   This is useful to have more widgets in the second than the first column.
 #
-# number of columns:
-# col=2
+# For widget configuration, edit widget files.
 
+# number of columns:
+col=2
+
+# layout:
 sysinfo     network
 partitions  services
 disks       apt

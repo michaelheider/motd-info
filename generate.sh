@@ -23,13 +23,14 @@ WIDGETS_PATH="$DIR/widgets"
 # shellcheck source-path=./tools
 source "${TOOL_PATH}/colors.sh"
 
-cols=$(grep 'col=' "$CONFIG_PATH" | sed 's/.*col=//')
+cols=$(grep '^col=' "$CONFIG_PATH" | sed 's/.*col=//')
 
 # execute widgets
+LAYOUT=$(grep --invert-match -P '^\s*#|^\s*$|col=' "$CONFIG_PATH")
 f=()
 for i in $(seq 1 "$cols"); do
 	f[i]=""
-	for w in $(awk '!/^#/ {print $'$i'}' "$CONFIG_PATH"); do
+	for w in $(awk '!/^#/ {print $'$i'}' <<<"$LAYOUT"); do
 		if [ -e "$WIDGETS_PATH/$w.sh" ]; then
 			f[i]+=$("$WIDGETS_PATH/$w.sh")
 			f[i]+="\n\n"
