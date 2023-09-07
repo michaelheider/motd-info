@@ -9,4 +9,5 @@
 sysinfo     network
 partitions  services
 disks       apt
-os          lastexec
+os          lastlogins
+-           lastexec

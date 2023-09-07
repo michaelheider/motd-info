@@ -1,8 +1,13 @@
 # motd Info
 
-motd Info generates a dynamic motd via shell scripts.
+motd Info generates a dynamic motd via shell scripts. It is easily configurable.
 
-It is easily configurable. Edit config.txt to change the layout. Edit the widgets to change their settings.
+## Principles
+
+- information is displayed with as little characters as possible while still easily readable
+- bad stand out more than good ones
+- dates are in [ISO-8601](https://en.wikipedia.org/wiki/ISO_8601)
+- times list the time zone
 
 ## Example
 
@@ -17,6 +22,27 @@ It is easily configurable. Edit config.txt to change the layout. Edit the widget
 2. create a symlink to the generate script in the `update-motd.d` directory:  
    `sudo ln -s /usr/local/src/motd-info/generate.sh /etc/update-motd.d/09-motd-info`
 3. check what other motd scripts are in `/etc/update-motd.d/` and delete the unwanted ones (probably all)
+4. configure `config.txt` to change the layout
+5. configure widgets
+
+### Widgets
+
+Check the widget files for config options.
+
+This chapter does not list all widgets, only ones that require special attention.
+
+#### lastlogins
+
+If you want to use the lastlogin widget:
+
+- lastlogins shows a list of the N most recently logged in users. This does not necessarily include you.
+  - This is because motd is user agnostic.
+- motd may be pregenerated and cached, hence the info may be stale.
+- Disable SSH's last login prompt by setting the `PrintLastLog` flag to `no` in `/etc/ssh/sshd_config`.
+
+#### lastexec
+
+lastexec may be useful on systems where motd is cached (e.g. Ubuntu) to see how old the information is.
 
 ## Development
 
@@ -46,15 +72,6 @@ The script (or symlink) in `/etc/update-motd.d/` must have a filename that satis
 
 Check whether your script would run (outputs list of all scripts that would run without running them):  
   `run-parts --test --lsbsysinit /etc/update-motd.d`
-
-### Last Login
-
-If you want to implement a last login widget, keep in mind:
-
-- motd is run as root and does ont know which user is currently logging in. Sometimes it is even pregenerated and cached.
-- motd is cached on some systems (e.g. Ubuntu), hence it may lead to stale info.
-
-If you decide to go ahead anyways, disable SSH's last login notification by setting the `PrintLastLog` flag to `no` in `sshd_config`.
 
 ## Further Reading on motd
 
