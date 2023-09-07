@@ -45,8 +45,10 @@ getPublicIp() {
 }
 
 # oublic IPs
+echo "get public IPs..." >&2
 publicIp4=$(getPublicIp 4)
 publicIp6=$(getPublicIp 6)
+echo -e "$LINE_UP$LINE_CLEAR$LINE_UP" >&2 # clear previous message
 
 # local IPs & interfaces
 localIps=$(ip -oneline addr show | awk '{print $1" " $2" "$4}' | cut -c 4- | grep -Ev " fe80:|^lo " || test $? = 1)
