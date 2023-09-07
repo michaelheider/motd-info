@@ -7,11 +7,11 @@ set -euo pipefail
 # Run it to see what it looks like.
 
 # config
-TIMEOUT=0.5 # seconds to get public IPs, can be decimal. '0' disables the timeout.
+TIMEOUT=1.0 # seconds to get public IPs, can be decimal. '0' disables the timeout.
 
-toolPath=$(realpath "$(dirname "$0")/../tools")
+TOOL_PATH=$(realpath "$(dirname "$0")/../tools")
 # shellcheck source-path=../tools
-source "${toolPath}/colors.sh"
+source "${TOOL_PATH}/colors.sh"
 
 # $1 is the IP version. Must be '4' or '6'.
 getPublicIp() {
@@ -24,19 +24,19 @@ getPublicIp() {
 		case $status in
 		124 | 137)
 			# timeout 124: terminated, timeout 137: killed
-			ip="${infoColor}IPv${1} timeout${reset}"
+			ip="${COLOR_INFO}IPv${1} timeout${RESET}"
 			;;
 		6)
 			# curl 6: could not resolve host
-			ip="${infoColor}IPv${1} DNS failed${reset}"
+			ip="${COLOR_INFO}IPv${1} DNS failed${RESET}"
 			;;
 		7)
 			# curl 7: failed to connect to host
-			ip="${infoColor}IPv${1} conn failed${reset}"
+			ip="${COLOR_INFO}IPv${1} conn failed${RESET}"
 			;;
 		*)
 			# should never happen
-			echo -e "${badColor}network widget: programmer mistake${reset}" >&2
+			echo -e "${COLOR_BAD}network widget: programmer mistake${RESET}" >&2
 			exit $status
 			;;
 		esac

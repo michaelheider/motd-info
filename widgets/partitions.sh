@@ -8,9 +8,9 @@ set -euo pipefail
 partitionWarn=80 # %
 filter=''        # excluded targets separated by |
 
-toolPath=$(realpath "$(dirname "$0")/../tools")
+TOOL_PATH=$(realpath "$(dirname "$0")/../tools")
 # shellcheck source-path=../tools
-source "${toolPath}/colors.sh"
+source "${TOOL_PATH}/colors.sh"
 
 if [ -n "$filter" ]; then
     # prepend '|' to put into filter below

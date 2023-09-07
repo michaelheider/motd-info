@@ -4,71 +4,71 @@ set -euo pipefail
 # Define colors and conditional coloring functions.
 
 # reset
-reset="\e[0m"
+RESET="\e[0m"
 
 # regular colors
-black="\e[0;30m"      
-red="\e[0;31m"         
-green="\e[0;32m"      
-yellow="\e[0;33m"    
-blue="\e[0;34m"        
-purple="\e[0;35m"     
-cyan="\e[0;36m"        
-white="\e[0;37m"       
+BLACK="\e[0;30m"      
+RED="\e[0;31m"         
+GREEN="\e[0;32m"      
+YELLOW="\e[0;33m"    
+BLUE="\e[0;34m"        
+PURPLE="\e[0;35m"     
+CYAN="\e[0;36m"        
+WHITE="\e[0;37m"       
 
 # bold colors
-bblack="\e[1;30m"     
-bred="\e[1;31m"      
-bgreen="\e[1;32m"     
-byellow="\e[1;33m"     
-bblue="\e[1;34m"     
-bpurple="\e[1;35m"   
-bcyan="\e[1;36m"      
-bwhite="\e[1;37m"    
+BLACK_B="\e[1;30m"     
+RED_B="\e[1;31m"      
+GREEN_B="\e[1;32m"     
+YELLOW_B="\e[1;33m"     
+BLUE_B="\e[1;34m"     
+PURPLE_B="\e[1;35m"   
+CYAN_B="\e[1;36m"      
+WHITE_B="\e[1;37m"    
 
 # other
-clearLine="\e[K"
-oneLineUp="\e[1A" # can replace 1 with a higher integer
-twoLinesUp="\e[2A"
+LINE_CLEAR="\e[K"
+LINE_UP="\e[1A" # can replace 1 with a higher integer
+LINE_UP2="\e[2A"
 
 # semantic colors
-goodColor=$green
-badColor=$bred
-infoColor=$yellow
+COLOR_GOOD=$GREEN
+COLOR_BAD=$RED_B
+COLOR_INFO=$YELLOW
 
 
-# c_if '2' '<' '5' '%'
-colorIf(){
+# example use: colorIf '2' '<' '5' '%'
+colorIf() {
 	if (( "${1%%.*}" "$2" "${3%%.*}" )); then
-		echo "${goodColor}$1${*:4}${reset}"
+		echo "${COLOR_GOOD}$1${*:4}${RESET}"
 	else
-		echo "${badColor}$1${*:4}${reset}"
+		echo "${COLOR_BAD}$1${*:4}${RESET}"
 	fi
 }
 
-# c_if '2' '<' '5' 'r1' 'r2'adamshand
-colorIfCustom(){
+# example use: colorIfCustom '2' '<' '5' 'r1' 'r2'adamshand
+colorIfCustom() {
 	if (( "${1%%.*}" "$2" "${3%%.*}" )); then
-		echo "${goodColor}${4}${reset}"
+		echo "${COLOR_GOOD}${4}${RESET}"
 	else
-		echo "${badColor}${5}${reset}"
+		echo "${COLOR_BAD}${5}${RESET}"
 	fi
 }
 
-# c_match 'abc' 'def' 'pkgs'
-colorMatch(){
+# example use: colorMatch 'abc' 'def' 'pkgs'
+colorMatch() {
 	if [[ "${1%%.*}" = "${2%%.*}" ]]; then
-		echo "${goodColor}$1${*:3}${reset}"
+		echo "${COLOR_GOOD}$1${*:3}${RESET}"
 	else
-		echo "${badColor}$1${*:3}${reset}"
+		echo "${COLOR_BAD}$1${*:3}${RESET}"
 	fi
 }
 
-# c_match_r 'abc' 'def' 'r1' 'r2'
-colorMatchCustom(){
+# example use: colorMatchCustom 'abc' 'def' 'r1' 'r2'
+colorMatchCustom() {
 	if [[ "${1%%.*}" = "${2%%.*}" ]]; then
-		echo "${goodColor}${3}${reset}"
+		echo "${COLOR_GOOD}${3}${RESET}"
 	else
-		echo "${badColor}${4}${reset}"
+		echo "${COLOR_BAD}${4}${RESET}"
 	fi
 }

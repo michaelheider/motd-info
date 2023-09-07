@@ -8,16 +8,16 @@ set -euo pipefail
 columns=2
 filter='' # excluded containers separated by |
 
-toolPath=$(realpath "$(dirname "$0")/../tools")
+TOOL_PATH=$(realpath "$(dirname "$0")/../tools")
 # shellcheck source-path=../tools
-source "${toolPath}/colors.sh"
+source "${TOOL_PATH}/colors.sh"
 
-if ! "${toolPath}/package-check.sh" docker; then
-	echo -e "${infoColor}docker not installed${reset}"
+if ! "${TOOL_PATH}/package-check.sh" docker; then
+	echo -e "${COLOR_INFO}docker not installed${RESET}"
 	exit 0
 fi
 
-mapfile -t containers < <(docker ps -a --format "{{.Names}} {{.Status}}" | awk '!/^('${filter}')/{print $1,$2}')
+mapfile -t containers < <(docker ps -a --format "{{.Names}} {{.Status}}" | awk '!/^('"${filter}"')/{print $1,$2}')
 
 out=''
 for i in "${!containers[@]}"; do

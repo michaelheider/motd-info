@@ -8,12 +8,12 @@ set -euo pipefail
 columns=2 # fills row-major
 filter='' # excluded containers separated by |
 
-toolPath=$(realpath "$(dirname "$0")/../tools")
+TOOL_PATH=$(realpath "$(dirname "$0")/../tools")
 # shellcheck source-path=../tools
-source "${toolPath}/colors.sh"
+source "${TOOL_PATH}/colors.sh"
 
-if ! "${toolPath}/package-check.sh" lxc; then
-	echo -e "${infoColor}lxc not installed${reset}"
+if ! "${TOOL_PATH}/package-check.sh" lxc; then
+	echo -e "${COLOR_INFO}lxc not installed${RESET}"
 	exit 0
 fi
 

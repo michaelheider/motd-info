@@ -16,26 +16,26 @@ while [ -L "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symli
 done
 DIR=$(cd -P "$(dirname "$SOURCE")" >/dev/null 2>&1 && pwd)
 
-toolPath="$DIR/tools"
-configPath="$DIR/config.txt"
-widgetsPath="$DIR/widgets"
+TOOL_PATH="$DIR/tools"
+CONFIG_PATH="$DIR/config.txt"
+WIDGETS_PATH="$DIR/widgets"
 
 # shellcheck source-path=./tools
-source "${toolPath}/colors.sh"
+source "${TOOL_PATH}/colors.sh"
 
-cols=$(grep 'col=' "$configPath" | sed 's/.*col=//')
+cols=$(grep 'col=' "$CONFIG_PATH" | sed 's/.*col=//')
 
 # execute widgets
 f=()
 for i in $(seq 1 "$cols"); do
 	f[i]=""
-	for w in $(awk '!/^#/ {print $'$i'}' "$configPath"); do
-		if [ -e "$widgetsPath/$w.sh" ]; then
-			f[i]+=$("$widgetsPath/$w.sh")
+	for w in $(awk '!/^#/ {print $'$i'}' "$CONFIG_PATH"); do
+		if [ -e "$WIDGETS_PATH/$w.sh" ]; then
+			f[i]+=$("$WIDGETS_PATH/$w.sh")
 			f[i]+="\n\n"
 		else
 			if [[ $w != '-' ]]; then
-				echo -e "${badColor}no widget '$w'${reset}" >&2
+				echo -e "${COLOR_BAD}no widget '$w'${RESET}" >&2
 			fi
 		fi
 	done

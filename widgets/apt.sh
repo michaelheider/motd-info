@@ -7,9 +7,9 @@ set -euo pipefail
 # config
 APT_CACHE_MAX_AGE="3days"
 
-toolPath=$(realpath "$(dirname "$0")/../tools")
+TOOL_PATH=$(realpath "$(dirname "$0")/../tools")
 # shellcheck source-path=../tools
-source "${toolPath}/colors.sh"
+source "${TOOL_PATH}/colors.sh"
 
 # get latest execution time of `apt update`
 # how Ansible does it
@@ -26,7 +26,7 @@ fi
 if [ "$cacheFresh" -eq 0 ] && [ "$(id -u)" -eq 0 ]; then
 	echo "running apt update..." >&2
 	apt-get -qq update
-	echo -e "$oneLineUp$clearLine$oneLineUp" >&2 # clear previous message
+	echo -e "$LINE_UP$LINE_CLEAR$LINE_UP" >&2 # clear previous message
 	cacheFresh=1
 fi
 # assemble message
@@ -34,13 +34,13 @@ if [ "$cacheFresh" -eq 1 ]; then
 	nrPackages=$(apt -qq list --upgradable 2>/dev/null | wc -l)
 	nrPackagesSecurity=$(apt -qq list --upgradable 2>/dev/null | { grep -c "\-security" || test $? = 1; })
 	if [ "$nrPackages" -eq 0 ]; then
-		upgradesMessage="${goodColor}no upgrades${reset}"
+		upgradesMessage="${COLOR_GOOD}no upgrades${RESET}"
 	else
-		upgradesMessage="${infoColor}${nrPackages} upgrades${reset}, "
+		upgradesMessage="${COLOR_INFO}${nrPackages} upgrades${RESET}, "
 		upgradesMessage+=$(colorIf "${nrPackagesSecurity}" '<' '1' " security")
 	fi
 else
-	upgradesMessage="${badColor}run \`apt update\`${reset}"
+	upgradesMessage="${COLOR_BAD}run \`apt update\`${RESET}"
 fi
 
 # print
@@ -48,5 +48,5 @@ echo 'packages:'
 echo -e "  $upgradesMessage"
 if [ -f "/run/reboot-required" ]; then
 	# reboot required
-	echo -e "  ${badColor}reboot required${reset}"
+	echo -e "  ${COLOR_BAD}reboot required${RESET}"
 fi
