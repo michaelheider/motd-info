@@ -1,27 +1,12 @@
-# Tinymotd
+# motd Info
 
-Tinymotd generate a configurable dynamic motd via shell script
+motd Info generates a dynamic motd via shell scripts.
+It is easily configurable.
 
-## Features
+## Example
 
-* Easy configuration and customisation
-* Tiny (<100kb) optimized scripts
-* Minimal dependencies
-
-## Demo
-
-![tinymotd](./motd.png)
+![example](./example.png)
 
 ## Setup
 
-To install this, with root rights:
-
-* Clone the repo
-* Install: `./install -u <user>`
-* Configure layout: `vim ./config`
-* Configure widgets: `vim ./widgets/<widget-name>`
-* Run interactively: `./generate`
-
-The script runs:
-* every hour for system information (cpu, disks, ...)
-* every day for other information (certificates, packages, ...)
+TODO
