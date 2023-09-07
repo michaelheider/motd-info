@@ -8,11 +8,11 @@ LANG=en_US.UTF-8
 # https://stackoverflow.com/a/246128/11391248 (2023-09-07)
 SOURCE=${BASH_SOURCE[0]}
 while [ -L "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
-    DIR=$(cd -P "$(dirname "$SOURCE")" >/dev/null 2>&1 && pwd)
-    SOURCE=$(readlink "$SOURCE")
-    # if $SOURCE was a relative symlink,
-    # we need to resolve it relative to the path where the symlink file was located
-    [[ $SOURCE != /* ]] && SOURCE=$DIR/$SOURCE
+	DIR=$(cd -P "$(dirname "$SOURCE")" >/dev/null 2>&1 && pwd)
+	SOURCE=$(readlink "$SOURCE")
+	# if $SOURCE was a relative symlink,
+	# we need to resolve it relative to the path where the symlink file was located
+	[[ $SOURCE != /* ]] && SOURCE=$DIR/$SOURCE
 done
 DIR=$(cd -P "$(dirname "$SOURCE")" >/dev/null 2>&1 && pwd)
 
@@ -46,4 +46,4 @@ for c in "${f[@]}"; do
 	[[ -z ${motd} ]] && motd="${c}" || motd=$(paste <(echo -e "${motd}") <(echo -e "${c}") -d'@')
 done
 motd=${motd::-3} # remove trailing newlines
-echo -e "${motd}" | sed 's,@, @ ,' | column -ts '@'
+echo -e "${motd}" | sed 's,@, @ ,' | column -ts'@'
