@@ -29,8 +29,8 @@ f=()
 for i in $(seq 1 "$cols"); do
 	f[i]=""
 	for w in $(awk '!/^#/ {print $'$i'}' "$configPath"); do
-		if [ -e "$widgetsPath/$w" ]; then
-			f[i]+=$("$widgetsPath/$w")
+		if [ -e "$widgetsPath/$w.sh" ]; then
+			f[i]+=$("$widgetsPath/$w.sh")
 			f[i]+="\n\n"
 		else
 			if [[ $w != '-' ]]; then
