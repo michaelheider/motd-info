@@ -1,5 +1,6 @@
 #!/bin/bash
 set -euo pipefail
+LANG=en_US.UTF-8
 
 # Check whether a package is installed.
 # The package is given as the first argument.

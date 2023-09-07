@@ -1,5 +1,6 @@
 #!/bin/bash
 set -euo pipefail
+LANG=en_US.UTF-8
 
 # Print overview of updates via `apt` and whether a restart is required.
 # Run it to see what it looks like.
@@ -21,8 +22,8 @@ if [ -n "$(find -H "$APT_UPDATE_SUCCESS_STAMP_PATH" -newermt "now -$APT_CACHE_MA
 elif [ -n "$(find -H "$APT_LISTS_PATH" -maxdepth 0 -newermt "now -$APT_CACHE_MAX_AGE" 2>/dev/null)" ]; then
 	cacheFresh=1
 fi
-# update if we are root
-if [ "$cacheFresh" -eq 0 ] && [[ "$USER" == "root" ]]; then
+# update if cash not fresh and we are root
+if [ "$cacheFresh" -eq 0 ] && [ "$(id -u)" -eq 0 ]; then
 	echo "running apt update..." >&2
 	apt-get -qq update
 	echo -e "$oneLineUp$clearLine$oneLineUp" >&2 # clear previous message

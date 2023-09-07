@@ -1,5 +1,6 @@
 #!/bin/bash
 set -euo pipefail
+LANG=en_US.UTF-8
 
 # Print OS information.
 # Run it to see what it looks like.
@@ -16,9 +17,9 @@ distro=$(lsb_release -rics 2>/dev/null | tr '\n' ' ')
 distro=${distro::-1} # remove trailing space
 
 table=''
-table+="distro|$distro\n"
-table+="kernel|$(uname -sr)\n"
-table+="arch|$(uname -m)\n"
+table+="distro:|$distro\n"
+table+="kernel:|$(uname -sr)\n"
+table+="arch:|$(uname -m)\n"
 
 echo 'OS:'
 echo -e "${table}" | column -ts'|' | sed 's,^,  ,'

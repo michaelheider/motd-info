@@ -1,5 +1,6 @@
 #!/bin/bash
 set -euo pipefail
+LANG=en_US.UTF-8
 
 # Print network information.
 # All local interafces and IPs, public IPv4 & IPv6, hostname.
@@ -59,4 +60,4 @@ message+="public6|$publicIp6\n"
 # output
 echo 'network:'
 echo -e "$message" | column -ts'|' | sed 's,^,  ,'
-echo "  hostname: $(uname -n)"
+echo "  hostname $(uname -n)"
