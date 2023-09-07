@@ -1,6 +1,5 @@
 #!/bin/bash
 set -euo pipefail
-LANG=en_US.UTF-8
 
 # Print status of services.
 # Run it to see what it looks like.
@@ -11,6 +10,7 @@ servicesRealNames=('rsyslog' 'logrotate.timer' 'cron' 'networking' 'sshd' 'apach
 servicesDisplayNames=('syslog' 'logrotate' 'cron' 'network' 'sshd' 'apache')
 
 toolPath=$(realpath "$(dirname "$0")/../tools")
+# shellcheck source-path=../tools
 source "${toolPath}/colors.sh"
 
 out=''

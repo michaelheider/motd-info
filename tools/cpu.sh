@@ -1,6 +1,5 @@
 #!/bin/bash
 set -euo pipefail
-LANG=en_US.UTF-8
 
 # Output CPU usage in percent.
 # Includes a noticeable sleep time.

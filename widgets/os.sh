@@ -1,11 +1,11 @@
 #!/bin/bash
 set -euo pipefail
-LANG=en_US.UTF-8
 
 # Print OS information.
 # Run it to see what it looks like.
 
 toolPath=$(realpath "$(dirname "$0")/../tools")
+# shellcheck source-path=../tools
 source "${toolPath}/colors.sh"
 
 if ! "${toolPath}/package-check.sh" lsb-release; then

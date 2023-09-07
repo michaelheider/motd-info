@@ -1,6 +1,5 @@
 #!/bin/bash
 set -euo pipefail
-LANG=en_US.UTF-8
 
 # Define colors and conditional coloring functions.
 

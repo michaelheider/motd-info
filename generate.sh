@@ -1,6 +1,6 @@
 #!/bin/bash
 set -euo pipefail
-LANG=en_US.UTF-8
+export LANG=en_US.UTF-8 # fix $LANG
 
 # Get the scripts location.
 # $SOURCE is the script, $DIR is the containing directory.
@@ -20,6 +20,7 @@ toolPath="$DIR/tools"
 configPath="$DIR/config.txt"
 widgetsPath="$DIR/widgets"
 
+# shellcheck source-path=./tools
 source "${toolPath}/colors.sh"
 
 cols=$(grep 'col=' "$configPath" | sed 's/.*col=//')
@@ -43,7 +44,8 @@ done
 # print
 motd=''
 for c in "${f[@]}"; do
-	[[ -z ${motd} ]] && motd="${c}" || motd=$(paste <(echo -e "${motd}") <(echo -e "${c}") -d'@')
+	[[ -z ${motd} ]] && motd="${c}" || motd=$(paste -d'@' <(echo -e "${motd}") <(echo -e "${c}"))
 done
 motd=${motd::-3} # remove trailing newlines
 echo -e "${motd}" | sed 's,@, @ ,' | column -ts'@'
+echo ''

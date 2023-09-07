@@ -1,6 +1,5 @@
 #!/bin/bash
 set -euo pipefail
-LANG=en_US.UTF-8
 
 # Print system info.
 # Run it to see what it looks like.
@@ -12,6 +11,7 @@ swapWarn=50 # %
 tempWarn=60 # °C
 
 toolPath=$(realpath "$(dirname "$0")/../tools")
+# shellcheck source-path=../tools
 source "${toolPath}/colors.sh"
 
 processes="$(ps --ppid 2 -p 2 --deselect | wc -l)"

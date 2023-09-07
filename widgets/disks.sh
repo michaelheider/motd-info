@@ -1,6 +1,5 @@
 #!/bin/bash
 set -euo pipefail
-LANG=en_US.UTF-8
 
 # Print disk health information.
 # Run it to see what it looks like.
@@ -13,6 +12,7 @@ tempWarn=50       # °C
 loadCycleWarn=500  # x1k cycles
 
 toolPath=$(realpath "$(dirname "$0")/../tools")
+# shellcheck source-path=../tools
 source "${toolPath}/colors.sh"
 
 if [ "$(id -u)" -ne 0 ]; then # check if we are not root

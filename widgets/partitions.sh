@@ -1,6 +1,5 @@
 #!/bin/bash
 set -euo pipefail
-LANG=en_US.UTF-8
 
 # Print information on partition usage.
 # Run it to see what it looks like.
@@ -10,6 +9,7 @@ partitionWarn=80 # %
 filter=''        # excluded targets separated by |
 
 toolPath=$(realpath "$(dirname "$0")/../tools")
+# shellcheck source-path=../tools
 source "${toolPath}/colors.sh"
 
 if [ -n "$filter" ]; then

@@ -1,6 +1,5 @@
 #!/bin/bash
 set -euo pipefail
-LANG=en_US.UTF-8
 
 # Print overview of updates via `apt` and whether a restart is required.
 # Run it to see what it looks like.
@@ -9,6 +8,7 @@ LANG=en_US.UTF-8
 APT_CACHE_MAX_AGE="3days"
 
 toolPath=$(realpath "$(dirname "$0")/../tools")
+# shellcheck source-path=../tools
 source "${toolPath}/colors.sh"
 
 # get latest execution time of `apt update`

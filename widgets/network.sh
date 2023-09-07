@@ -1,6 +1,5 @@
 #!/bin/bash
 set -euo pipefail
-LANG=en_US.UTF-8
 
 # Print network information.
 # All local interafces and IPs, public IPv4 & IPv6, hostname.
@@ -11,6 +10,7 @@ LANG=en_US.UTF-8
 TIMEOUT=0.5 # seconds to get public IPs, can be decimal. '0' disables the timeout.
 
 toolPath=$(realpath "$(dirname "$0")/../tools")
+# shellcheck source-path=../tools
 source "${toolPath}/colors.sh"
 
 # $1 is the IP version. Must be '4' or '6'.

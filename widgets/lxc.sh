@@ -1,6 +1,5 @@
 #!/bin/bash
 set -euo pipefail
-LANG=en_US.UTF-8
 
 # Print status of services.
 # Run it to see what it looks like.
@@ -10,6 +9,7 @@ columns=2 # fills row-major
 filter='' # excluded containers separated by |
 
 toolPath=$(realpath "$(dirname "$0")/../tools")
+# shellcheck source-path=../tools
 source "${toolPath}/colors.sh"
 
 if ! "${toolPath}/package-check.sh" lxc; then
@@ -17,7 +17,7 @@ if ! "${toolPath}/package-check.sh" lxc; then
 	exit 0
 fi
 
-mapfile -t containers < <(lxc-ls -f | awk '!/^('${filter}')/{print $1,$2}' | sed '/^\s*$/d' | tail -n+2)
+mapfile -t containers < <(lxc-ls -f | awk '!/^('"${filter}"')/{print $1,$2}' | sed '/^\s*$/d' | tail -n+2)
 
 out=''
 for i in "${!containers[@]}"; do
