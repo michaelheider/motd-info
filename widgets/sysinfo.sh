@@ -5,10 +5,10 @@ set -euo pipefail
 # Run it to see what it looks like.
 
 # config: cutoff values
-cpuWarn=30  # %
-memWarn=50  # %
-swapWarn=50 # %
-tempWarn=60 # °C
+CPU_WARN=30  # %
+MEM_WARN=50  # %
+SWAP_WARN=50 # %
+TEMP_WARN=60 # °C
 
 TOOL_PATH=$(realpath "$(dirname "$0")/../tools")
 # shellcheck source-path=../tools
@@ -28,10 +28,10 @@ else
 	temp="?"
 fi
 
-cpu=$(colorIf "${cpu}" '<' "${cpuWarn}" '%')
-mem=$(colorIf "${mem}" '<' "${memWarn}" '%')
-swap=$(colorIf "${swap}" '<' "${swapWarn}" '%')
-temp=$(colorIf "${temp}" '<' "${tempWarn}" '°C')
+cpu=$(colorIf "${cpu}" '<' "${CPU_WARN}" '%')
+mem=$(colorIf "${mem}" '<' "${MEM_WARN}" '%')
+swap=$(colorIf "${swap}" '<' "${SWAP_WARN}" '%')
+temp=$(colorIf "${temp}" '<' "${TEMP_WARN}" '°C')
 load=$(colorIf "${load}" '<' "$cores")
 
 table=''

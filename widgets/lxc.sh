@@ -5,8 +5,8 @@ set -euo pipefail
 # Run it to see what it looks like.
 
 # config
-columns=2 # fills row-major
-filter='' # excluded containers separated by |
+COLUMNS=2 # fills row-major
+FILTER='' # excluded containers separated by |
 
 TOOL_PATH=$(realpath "$(dirname "$0")/../tools")
 # shellcheck source-path=../tools
@@ -17,14 +17,14 @@ if ! "${TOOL_PATH}/package-check.sh" lxc; then
 	exit 0
 fi
 
-mapfile -t containers < <(lxc-ls -f | awk '!/^('"${filter}"')/{print $1,$2}' | sed '/^\s*$/d' | tail -n+2)
+mapfile -t containers < <(lxc-ls -f | awk '!/^('"${FILTER}"')/{print $1,$2}' | sed '/^\s*$/d' | tail -n+2)
 
 out=''
 for i in "${!containers[@]}"; do
 	IFS=" " read -r name status <<<"${containers[$i]}"
 	status=$(colorMatch "${status}" 'RUNNING')
 	out+="${name}|${status,,}|"
-	(($(((i + 1) % columns)) == 0)) && out+='\n'
+	(($(((i + 1) % COLUMNS)) == 0)) && out+='\n'
 done
 if [[ -z "${out}" ]]; then
 	out='none'

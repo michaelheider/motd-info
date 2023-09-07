@@ -5,23 +5,23 @@ set -euo pipefail
 # Run it to see what it looks like.
 
 # config
-partitionWarn=80 # %
-filter=''        # excluded targets separated by |
+PARTITION_WARN=80 # %
+FILTER=''         # excluded targets separated by |
 
 TOOL_PATH=$(realpath "$(dirname "$0")/../tools")
 # shellcheck source-path=../tools
 source "${TOOL_PATH}/colors.sh"
 
-if [ -n "$filter" ]; then
+if [ -n "$FILTER" ]; then
     # prepend '|' to put into filter below
-    filter="|$filter"
+    FILTER="|$FILTER"
 fi
-mapfile -t partitions < <(df -hT | grep -vE "tmpfs|vfat${filter}" | tail -n+2 | sort -k7)
+mapfile -t partitions < <(df -hT | grep -vE "tmpfs|vfat${FILTER}" | tail -n+2 | sort -k7)
 out=" |Size|Use%\n"
 for line in "${partitions[@]}"; do
     IFS=" " read -r device fstype size used available percent target <<<"${line}"
     percentnb=${percent//%/}
-    percent=$(colorIf "${percentnb}" '<' "${partitionWarn}" '%')
+    percent=$(colorIf "${percentnb}" '<' "${PARTITION_WARN}" '%')
     out+="${target}|${size}|${percent}\n"
 done
 

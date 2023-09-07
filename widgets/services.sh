@@ -5,20 +5,20 @@ set -euo pipefail
 # Run it to see what it looks like.
 
 # config
-columns=2 # fills row-major
-servicesRealNames=('rsyslog' 'logrotate.timer' 'cron' 'networking' 'sshd' 'apache2')
-servicesDisplayNames=('syslog' 'logrotate' 'cron' 'network' 'sshd' 'apache')
+COLUMNS=2 # fills row-major
+SERVICES_REAL_NAMES=('rsyslog' 'logrotate.timer' 'cron' 'networking' 'sshd' 'apache2')
+SERVICES_DISPLAY_NAMES=('syslog' 'logrotate' 'cron' 'network' 'sshd' 'apache')
 
 TOOL_PATH=$(realpath "$(dirname "$0")/../tools")
 # shellcheck source-path=../tools
 source "${TOOL_PATH}/colors.sh"
 
 out=''
-for i in "${!servicesRealNames[@]}"; do
-	serviceStatus=$(systemctl is-active "${servicesRealNames[i]}") || true
+for i in "${!SERVICES_REAL_NAMES[@]}"; do
+	serviceStatus=$(systemctl is-active "${SERVICES_REAL_NAMES[i]}") || true
 	serviceStatus=$(colorMatch "${serviceStatus}" 'active')
-	out+="${servicesDisplayNames[$i]}|${serviceStatus}|"
-	((((i + 1) % columns) == 0)) && out+='\n'
+	out+="${SERVICES_DISPLAY_NAMES[$i]}|${serviceStatus}|"
+	((((i + 1) % COLUMNS) == 0)) && out+='\n'
 done
 out+='\n'
 
