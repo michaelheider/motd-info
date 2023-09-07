@@ -5,4 +5,4 @@ LANG=en_US.UTF-8
 # Prints the current time, i.e. the time of execution.
 # Run it to see what it looks like.
 
-echo "info as of: $(date --utc +"%Y-%m-%d %H:%M:%S") UTC"
+echo "as of $(date +"%Y-%m-%d %H:%M:%S %Z")"
