@@ -40,5 +40,5 @@ table+="memory|${mem}|processes|${processes}\n"
 table+="swap|${swap}|uptime|${uptime}d\n"
 table+="temp|${temp}|users now|${users}\n"
 
-echo 'system info:'
+echo 'system resources:'
 echo -e "${table}" | column -ts'|' -R "2,4" | sed 's,^,  ,'

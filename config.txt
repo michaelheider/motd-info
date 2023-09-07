@@ -6,7 +6,7 @@
 # number of columns:
 # col=2
 
-sysinfo   network
-disks     partitions
-services  apt
-os        lastexec
+sysinfo     network
+partitions  services
+disks       apt
+os          lastexec
