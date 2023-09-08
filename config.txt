@@ -3,6 +3,7 @@
 # Specify widget names without ".sh".
 # Use '-' as placeholder for no widget.
 #   This is useful to have more widgets in the second than the first column.
+#   It does not insert blank space. Use the blank widget for that.
 #
 # For widget configuration, edit widget files.
 
