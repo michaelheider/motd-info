@@ -2,6 +2,14 @@
 set -euo pipefail
 
 # Print overview of updates via `apt` and whether a restart is required.
+# NOTE: You may want to install needsrestart to be notified of required restarts
+#       due to library upgrades.
+#       needrestart checks after every library upgrade, whether something needs restarting.
+#       If `sudo needrestart` displays `Failed to check for processor microcode upgrades.`,
+#       then in `/etc/needrestart/needrestart.conf` set `$nrconf{ucodehints} = 0;` to
+#       disable microcode checks.
+#       The command `sudo needrestart` only works with `sudo`. Otherwise you get
+#       `needrestart: command not found`.
 # Run it to see what it looks like.
 
 # config
