@@ -8,7 +8,7 @@ set -euo pipefail
 
 # config
 POWER_ON_TIME_WARN="2.0"  # years, decimal
-TEMP_WARN=50              # °C
+TEMP_WARN=60              # °C
 LOAD_CYCLE_WARN=500       # x1k cycles
 REALLOCATED_SECTOR_WARN=1 # sectors
 
@@ -21,46 +21,79 @@ if [ "$(id -u)" -ne 0 ]; then # check if we are not root
 	exit 0
 fi
 
-mapfile -t disks < <(lsblk -Spno KNAME)
+# find disks
+paths=$(lsblk -pno KNAME,TYPE | { grep disk || test $? = 1; } | awk '{print $1}')
+mapfile -t disks <<<"$paths"
 if [ ${#disks[@]} -eq 0 ]; then
 	# no disk supports SMART
 	echo -e "${COLOR_INFO}no disk health info${RESET}"
 	exit 0
 fi
-out=" |Status|Pwr|Temp|Cycl|Real\n"
+
+# check for smartmontools
+# only check here, when we are past the findin disks stage
+if ! "${TOOL_PATH}/package-check.sh" smartmontools; then
+	echo -e "${COLOR_INFO}smartmontools not installed${RESET}"
+	exit 0
+fi
+
+# assemble message
+out=" |Chck|Pwr|T|Cycl|Real\n"
 for disk in "${disks[@]}"; do
-	smart="$(smartctl -A -H -d sat "${disk}" || true)"
-	# power on time
-	powerOnTimeH="$(echo "${smart}" | awk '/Power_On_Hours/ {print $10}')"
-	if [[ -n "${powerOnTimeH}" ]]; then
-		powerOnTimeY="$(bc -l <<<"scale=1; $((powerOnTimeH / 24))/365")"
-		powerOnTimeY=$(printf '%3.1f\n' "$powerOnTimeY") # ensure leading 0
-		if [ "$(bc -l <<<"$powerOnTimeY < $POWER_ON_TIME_WARN")" -eq 1 ]; then
-			color=$COLOR_GOOD
-		else
-			color=$COLOR_BAD
-		fi
-		powerOnTime="${color}${powerOnTimeY}y${RESET}"
-	else
-		powerOnTime='.'
-	fi
-	# temp
-	t1="$(echo "${smart}" | awk '/Temperature_Celsius/ {print $10}')"
-	t2="$(echo "${smart}" | awk '/Airflow_Temperature_Cel/ {print $10}')"
-	temp=$((t1 > t2 ? t1 : t2))
-	temp="$(colorIf "${temp}" '<' "${TEMP_WARN}" '°')"
-	# load cycle count
-	cycle="$(echo "${smart}" | awk '/Load_Cycle_Count/ {print $10}')"
-	[[ -n "${cycle}" ]] && cycle="$(colorIf $((cycle / 1000)) '<' "${LOAD_CYCLE_WARN}" 'k')" || cycle='.'
-	# reallocated sector count
-	sect="$(echo "${smart}" | awk '/Reallocated_Sector_Ct/ {print $10}')"
-	[[ -n "${sect}" ]] && sect="$(colorIf "$sect" '<' $REALLOCATED_SECTOR_WARN)" || sect='.'
+	# get smart values
+	smart="$(smartctl --attributes --health "$disk" || true)"
+	# get (very rough) idea of the device type and hence the output format
+	if grep -q 'NVMe' <<<"$smart"; then nvme=1; else nvme=0; fi
+
 	# status
-	status="$(echo "${smart}" | awk '/SMART overall-health self-assessment test result:/ {print $6}')"
-	status="$(colorMatch "${status}" 'PASSED')"
+	status="$(awk '/SMART overall-health self-assessment test result:/ {print $6}' <<<"$smart")"
+	status="$(colorMatchCustom "$status" 'PASSED' 'pass' "$status")"
+	# power on time
+	if [ $nvme -eq 0 ]; then
+		powerOnTimeH="$(awk -- '/Power_On_Hours/ {print $10}' <<<"$smart")"
+	else
+		powerOnTimeH="$(awk -- '/Power On Hours/ {print $NF}' <<<"$smart")"
+	fi
+	powerOnTimeY="$(bc -l <<<"scale=1; $((powerOnTimeH / 24))/365")"
+	powerOnTimeY=$(printf '%3.1f\n' "$powerOnTimeY") # ensure leading 0
+	if [ "$(bc -l <<<"$powerOnTimeY < $POWER_ON_TIME_WARN")" -eq 1 ]; then
+		color=$COLOR_GOOD
+	else
+		color=$COLOR_BAD
+	fi
+	powerOnTime="${color}${powerOnTimeY}y${RESET}"
+	if [ $nvme -eq 0 ]; then
+		# temp
+		t1="$(awk -- '/Temperature_Celsius"/ {print $10}' <<<"$smart")"
+		t2="$(awk -- '/Airflow_Temperature_Cel/ {print $10}' <<<"$smart")"
+		temp=$((t1 > t2 ? t1 : t2)) # in case both temps are valid, take higher
+	else
+		temp="$(awk -- '/^Temperature:/ {print $(NF-1)}' <<<"$smart")"
+	fi
+	if [ "$temp" -eq 0 ]; then
+		temp='.'
+	else
+		temp="$(colorIf "$temp" '<' "$TEMP_WARN" '°C')"
+	fi
+	# load cycle count
+	if [ $nvme -eq 0 ]; then
+		cycle="$(awk -- '/Load_Cycle_Count/ {print $10}' <<<"$smart")"
+		[[ -n "${cycle}" ]] && cycle="$(colorIf $((cycle / 1000)) '<' "${LOAD_CYCLE_WARN}" 'k')" || cycle='.'
+	else
+		cycle='.'
+	fi
+	# reallocated sector count
+	if [ $nvme -eq 0 ]; then
+		sect="$(awk -- '/Reallocated_Sector_Ct/ {print $10}' <<<"$smart")"
+		[[ -n "${sect}" ]] && sect="$(colorIf "$sect" '<' $REALLOCATED_SECTOR_WARN)" || sect='.'
+	else
+		sect='.'
+	fi
 	# output
 	out+="${disk##*/}|${status}|${powerOnTime}|${temp}|${cycle}|${sect}\n"
 done
 
 echo 'disks health:'
 echo -e "${out}" | column -ts'|' | sed 's,^,  ,'
+
+# powerOnTimeH="$(awk -v SEP="$SEP" -v COL="$COL" -- 'match($0, "Power"SEP"On"SEP"Hours") {if (COL == -1) {COL=NF}; print $COL}' <<<"$smart")"
