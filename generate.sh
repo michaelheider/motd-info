@@ -16,12 +16,12 @@ while [ -L "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symli
 done
 DIR=$(cd -P "$(dirname "$SOURCE")" >/dev/null 2>&1 && pwd)
 
-TOOL_PATH="$DIR/tools"
+HELPERS="$DIR/helpers"
 CONFIG_PATH="$DIR/config.txt"
 WIDGETS_PATH="$DIR/widgets"
 
-# shellcheck source-path=./tools
-source "${TOOL_PATH}/colors.sh"
+# shellcheck source-path=./helpers
+source "${HELPERS}/colors.sh"
 
 cols=$(grep '^col=' "$CONFIG_PATH" | sed 's/.*col=//')
 

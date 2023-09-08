@@ -9,9 +9,9 @@ COLUMNS=2 # fills row-major
 SERVICES_REAL_NAMES=('rsyslog' 'logrotate.timer' 'cron' 'networking' 'sshd' 'apache2')
 SERVICES_DISPLAY_NAMES=('syslog' 'logrotate' 'cron' 'network' 'sshd' 'apache')
 
-TOOL_PATH=$(realpath "$(dirname "$0")/../tools")
-# shellcheck source-path=../tools
-source "${TOOL_PATH}/colors.sh"
+HELPERS=$(realpath "$(dirname "$0")/../helpers")
+# shellcheck source-path=../helpers
+source "${HELPERS}/colors.sh"
 
 out=''
 for i in "${!SERVICES_REAL_NAMES[@]}"; do

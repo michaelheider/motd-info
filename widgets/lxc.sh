@@ -8,12 +8,12 @@ set -euo pipefail
 COLUMNS=2 # fills row-major
 FILTER='' # excluded containers separated by |
 
-TOOL_PATH=$(realpath "$(dirname "$0")/../tools")
-# shellcheck source-path=../tools
-source "${TOOL_PATH}/colors.sh"
+HELPERS=$(realpath "$(dirname "$0")/../helpers")
+# shellcheck source-path=../helpers
+source "${HELPERS}/colors.sh"
 
-if ! "${TOOL_PATH}/package-check.sh" lxc; then
-	echo -e "${COLOR_INFO}lxc not installed${RESET}"
+if ! "${HELPERS}/cmd-exists.sh" lxc-ls; then
+	echo -e "${COLOR_INFO}no lxc-ls command available${RESET}"
 	exit 0
 fi
 

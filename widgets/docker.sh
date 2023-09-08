@@ -8,11 +8,11 @@ set -euo pipefail
 COLUMNS=2
 FILTER='' # excluded containers separated by |
 
-TOOL_PATH=$(realpath "$(dirname "$0")/../tools")
-# shellcheck source-path=../tools
-source "${TOOL_PATH}/colors.sh"
+HELPERS=$(realpath "$(dirname "$0")/../helpers")
+# shellcheck source-path=../helpers
+source "${HELPERS}/colors.sh"
 
-if ! "${TOOL_PATH}/package-check.sh" docker; then
+if ! "${HELPERS}/cmd-exists.sh" docker; then
 	echo -e "${COLOR_INFO}docker not installed${RESET}"
 	exit 0
 fi

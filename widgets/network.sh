@@ -9,9 +9,9 @@ set -euo pipefail
 # config
 TIMEOUT=1.0 # seconds to get public IPs, can be decimal. '0' disables the timeout.
 
-TOOL_PATH=$(realpath "$(dirname "$0")/../tools")
-# shellcheck source-path=../tools
-source "${TOOL_PATH}/colors.sh"
+HELPERS=$(realpath "$(dirname "$0")/../helpers")
+# shellcheck source-path=../helpers
+source "${HELPERS}/colors.sh"
 
 # $1 is the IP version. Must be '4' or '6'.
 getPublicIp() {

@@ -13,9 +13,9 @@ export LC_TIME=POSIX # to have consistent date formats
 # config
 NR=3 # max users displayed
 
-TOOL_PATH=$(realpath "$(dirname "$0")/../tools")
-# shellcheck source-path=../tools
-source "${TOOL_PATH}/colors.sh"
+HELPERS=$(realpath "$(dirname "$0")/../helpers")
+# shellcheck source-path=../helpers
+source "${HELPERS}/colors.sh"
 
 info=$(lastlog | tail -n +2 | { grep --invert-match --fixed-strings '**Never logged in**' || test $? = 1; })
 

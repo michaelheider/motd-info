@@ -4,12 +4,12 @@ set -euo pipefail
 # Print OS information.
 # Run it to see what it looks like.
 
-TOOL_PATH=$(realpath "$(dirname "$0")/../tools")
-# shellcheck source-path=../tools
-source "${TOOL_PATH}/colors.sh"
+HELPERS=$(realpath "$(dirname "$0")/../helpers")
+# shellcheck source-path=../helpers
+source "${HELPERS}/colors.sh"
 
-if ! "${TOOL_PATH}/package-check.sh" lsb-release; then
-	echo "lsb-release not installed"
+if ! "${HELPERS}/cmd-exists.sh" lsb_release; then
+	echo "${COLOR_INFO}lsb-release not installed${RESET}"
 	exit 0
 fi
 

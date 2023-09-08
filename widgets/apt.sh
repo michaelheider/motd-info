@@ -15,9 +15,15 @@ set -euo pipefail
 # config
 APT_CACHE_MAX_AGE="3days"
 
-TOOL_PATH=$(realpath "$(dirname "$0")/../tools")
-# shellcheck source-path=../tools
-source "${TOOL_PATH}/colors.sh"
+HELPERS=$(realpath "$(dirname "$0")/../helpers")
+# shellcheck source-path=../helpers
+source "${HELPERS}/colors.sh"
+
+# check for apt
+if ! "${HELPERS}/cmd-exists.sh" apt; then
+	echo "${COLOR_INFO}apt not installed${RESET}"
+	exit 0
+fi
 
 # get latest execution time of `apt update`
 # how Ansible does it

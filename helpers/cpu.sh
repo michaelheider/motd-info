@@ -4,9 +4,9 @@ set -euo pipefail
 # Output CPU usage in percent.
 # Includes a noticeable sleep time.
 
-TOOL_PATH=$(realpath "$(dirname "$0")/../tools")
-# shellcheck source-path=../tools
-source "${TOOL_PATH}/colors.sh"
+HELPERS=$(realpath "$(dirname "$0")/../helpers")
+# shellcheck source-path=../helpers
+source "${HELPERS}/colors.sh"
 
 # return idle and total CPU time since system start
 cpuStats() {

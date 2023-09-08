@@ -12,9 +12,9 @@ TEMP_WARN=60              # °C
 LOAD_CYCLE_WARN=500       # x1k cycles
 REALLOCATED_SECTOR_WARN=1 # sectors
 
-TOOL_PATH=$(realpath "$(dirname "$0")/../tools")
-# shellcheck source-path=../tools
-source "${TOOL_PATH}/colors.sh"
+HELPERS=$(realpath "$(dirname "$0")/../helpers")
+# shellcheck source-path=../helpers
+source "${HELPERS}/colors.sh"
 
 if [ "$(id -u)" -ne 0 ]; then # check if we are not root
 	echo -e "${COLOR_INFO}disk health needs root${RESET}"
@@ -32,7 +32,7 @@ fi
 
 # check for smartmontools
 # only check here, when we are past the findin disks stage
-if ! "${TOOL_PATH}/package-check.sh" smartmontools; then
+if ! "${HELPERS}/cmd-exists.sh" smartctl; then
 	echo -e "${COLOR_INFO}smartmontools not installed${RESET}"
 	exit 0
 fi
