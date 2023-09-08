@@ -3,11 +3,11 @@ set -euo pipefail
 
 # Print network information.
 # All local interafces and IPs, public IPv4 & IPv6, hostname.
-# It takes roughly 1s to get both IPv4 and IPv6.
+# It takes roughly 0.05s each to get the public IPv4 and IPv6.
 # Run it to see what it looks like.
 
 # config
-TIMEOUT=1.0 # seconds to get public IPs, can be decimal. '0' disables the timeout.
+TIMEOUT=0.5 # seconds. Timeout to get public IPs, can be decimal. 0 disables the timeout.
 
 HELPERS=$(realpath "$(dirname "$0")/../helpers")
 # shellcheck source-path=../helpers
@@ -17,22 +17,37 @@ source "${HELPERS}/colors.sh"
 getPublicIp() {
 	# Command needs to be inside if to be able to
 	# read return value into variable and read exit status and have `set -2`.
-	if answer=$(timeout $TIMEOUT curl https://ip${1}only.me/api/ 2>/dev/null); then
-		ip=$(awk -F ',' '{print $2}' <<<"$answer")
+
+	# IP protocol version. Must be 4 or 6.
+	V=$1
+	case $V in
+	4)
+		RESOLVER='resolver1.opendns.com'
+		RECORD=A
+		;;
+	6)
+		RESOLVER='resolver1.ipv6-sandbox.opendns.com'
+		RECORD=AAAA
+		;;
+	esac
+
+	# myip.opendns.com: Query A or AAAA for your source address as seen by the resolver
+	if ip=$(timeout $TIMEOUT dig -"$V" +short 'myip.opendns.com' "$RECORD" "@$RESOLVER" 2>/dev/null); then
+		:
 	else
 		status=$?
 		case $status in
 		124 | 137)
 			# timeout 124: terminated, timeout 137: killed
-			ip="${COLOR_INFO}IPv${1} timeout${RESET}"
+			ip="${COLOR_INFO}IPv$V timeout${RESET}"
 			;;
-		6)
-			# curl 6: could not resolve host
-			ip="${COLOR_INFO}IPv${1} DNS failed${RESET}"
+		9)
+			# dig 6: no reply from server
+			ip="${COLOR_INFO}IPv$V conn failed${RESET}"
 			;;
-		7)
-			# curl 7: failed to connect to host
-			ip="${COLOR_INFO}IPv${1} conn failed${RESET}"
+		10)
+			# dig 10: internal error
+			ip="${COLOR_INFO}IPv$V DNS failed${RESET}"
 			;;
 		*)
 			# should never happen
@@ -41,6 +56,7 @@ getPublicIp() {
 			;;
 		esac
 	fi
+
 	echo "$ip"
 }
 
