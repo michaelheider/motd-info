@@ -65,7 +65,7 @@ for disk in "${disks[@]}"; do
 	powerOnTime="${color}${powerOnTimeY}y${RESET}"
 	if [ $nvme -eq 0 ]; then
 		# temp
-		t1="$(awk -- '/Temperature_Celsius"/ {print $10}' <<<"$smart")"
+		t1="$(awk -- '/Temperature_Celsius/ {print $10}' <<<"$smart")"
 		t2="$(awk -- '/Airflow_Temperature_Cel/ {print $10}' <<<"$smart")"
 		temp=$((t1 > t2 ? t1 : t2)) # in case both temps are valid, take higher
 	else
