@@ -48,7 +48,11 @@ for disk in "${disks[@]}"; do
 
 	# status
 	status="$(awk '/SMART overall-health self-assessment test result:/ {print $6}' <<<"$smart")"
-	status="$(colorMatchCustom "$status" 'PASSED' 'pass' "$status")"
+	if [ -n "$status" ]; then
+		status="$(colorMatchCustom "$status" 'PASSED' 'pass' "$status")"
+	else
+		status='.'
+	fi
 	# power on time
 	if [ $nvme -eq 0 ]; then
 		powerOnTimeH="$(awk -- '/Power_On_Hours/ {print $10}' <<<"$smart")"
