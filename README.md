@@ -4,9 +4,12 @@ motd Info generates a dynamic motd via shell scripts. It is easily configurable.
 
 ## Principles
 
+motd Info follows the following principles:
+
 - information is displayed with as little characters as possible while still easily readable
-- bad stand out more than good ones
-- dates are in [ISO-8601](https://en.wikipedia.org/wiki/ISO_8601)
+  - this also means having sufficient blank space inbetween
+- bad values stand out more than good ones
+- dates are [ISO-8601](https://en.wikipedia.org/wiki/ISO_8601)
 - times specify the time zone
 
 ## Example
@@ -66,9 +69,9 @@ lastexec may be useful on systems where motd is cached (e.g. Ubuntu) to see how 
 
 The motd displayed at login may not be up to date. Depending on the system, it is pre-generated and then cached for a while.
 
-Ubuntu caches it. Proxmox does not. Any others I don't know about.
+Ubuntu caches it. Proxmox does not. Any others I don't know.
 
-### Naming
+### Script Naming
 
 The script (or symlink) in `/etc/update-motd.d/` must have a filename that satisfies:
 
@@ -78,11 +81,6 @@ The script (or symlink) in `/etc/update-motd.d/` must have a filename that satis
 
 Check whether your script would run (outputs list of all scripts that would run without running them):  
   `run-parts --test --lsbsysinit /etc/update-motd.d`
-
-## Further Reading on motd
-
-- [Debian wiki](https://wiki.debian.org/motd)
-- [Ubuntu Manpage](https://manpages.ubuntu.com/manpages/trusty/en/man5/update-motd.5.html)
 
 ## Other motd
 
@@ -94,3 +92,7 @@ Other informational motd:
 - [ssh-motd](https://github.com/brombomb/ssh-motd) by Rob Walsh
 - [dynamic-motd](https://github.com/ldidry/dynamic-motd) by Luc Didry
 - [proxmox-motd](https://github.com/voklab/proxmox-motd) by Kevin Vo
+
+## Further Reading
+
+See [motd.md](./motd.md).
