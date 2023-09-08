@@ -3,11 +3,11 @@ set -euo pipefail
 export LC_TIME=POSIX # to have consistent date formats
 
 # Show info about last logins.
-# INFO: To disable SSH's last login prompt, set the `PrintLastLog` flag to `no` in `/etc/ssh/sshd_config`.
 # NOTE: This differs from SSH's last login prompt. SSH shows the last login of
 #       the logged in user. This shows the last login of the N most recently
 #       logged in users. This is because motd is executed as root (and sometimes
 #       even cached and thus stale), so motd is user agnostic.
+# INFO: To disable SSH's last login prompt, set the `PrintLastLog` flag to `no` in `/etc/ssh/sshd_config`.
 # Run it to see what it looks like.
 
 # config
