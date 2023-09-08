@@ -35,14 +35,7 @@ This chapter does not list all widgets, only ones that require special attention
 #### apt
 
 You may want to install needsrestart to be notified of required restarts due to library upgrades.
-
-#### needrestart
-
-needrestart checks after every library upgrade, whether something needs restarting.
-
-If `sudo needrestart` displays `Failed to check for processor microcode upgrades.`, then in `/etc/needrestart/needrestart.conf` set `$nrconf{ucodehints} = 0;` to disable microcode checks.
-
-The command `sudo needrestart` only works with `sudo`. Otherwise you get `needrestart: command not found`.
+Check the widget for more info.
 
 #### lastlogins
 
