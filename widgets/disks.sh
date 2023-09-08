@@ -83,14 +83,22 @@ for disk in "${disks[@]}"; do
 	# load cycle count
 	if [ $nvme -eq 0 ]; then
 		cycle="$(awk -- '/Load_Cycle_Count/ {print $10}' <<<"$smart")"
-		[[ -n "${cycle}" ]] && cycle="$(colorIf $((cycle / 1000)) '<' "${LOAD_CYCLE_WARN}" 'k')" || cycle='.'
+		if [ -n "$cycle" ]; then
+			cycle="$(colorIf $((cycle / 1000)) '<' "${LOAD_CYCLE_WARN}" 'k')"
+		else
+			cycle='.'
+		fi
 	else
 		cycle='.'
 	fi
 	# reallocated sector count
 	if [ $nvme -eq 0 ]; then
 		sectors="$(awk -- '/Reallocated_Sector_Ct/ {print $10}' <<<"$smart")"
-		[[ -n "${sectors}" ]] && sectors="$(colorIf "$sectors" '<' $REALLOCATED_SECTOR_WARN)" || sectors='.'
+		if [ -n "${sectors}" ]; then
+			sectors="$(colorIf "$sectors" '<' $REALLOCATED_SECTOR_WARN)"
+		else
+			sectors='.'
+		fi
 	else
 		sectors='.'
 	fi
