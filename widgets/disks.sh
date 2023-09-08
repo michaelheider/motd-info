@@ -38,7 +38,8 @@ if ! "${TOOL_PATH}/package-check.sh" smartmontools; then
 fi
 
 # assemble message
-out=" |Chck|Pwr|T|Cycl|Real\n"
+# format: device name | power on time | temp | load cycles | reallocated sectors
+out=" |Chck|Pwr|T|LCyc|RSc\n"
 for disk in "${disks[@]}"; do
 	# get smart values
 	smart="$(smartctl --attributes --health "$disk" || true)"
@@ -84,13 +85,13 @@ for disk in "${disks[@]}"; do
 	fi
 	# reallocated sector count
 	if [ $nvme -eq 0 ]; then
-		sect="$(awk -- '/Reallocated_Sector_Ct/ {print $10}' <<<"$smart")"
-		[[ -n "${sect}" ]] && sect="$(colorIf "$sect" '<' $REALLOCATED_SECTOR_WARN)" || sect='.'
+		sectors="$(awk -- '/Reallocated_Sector_Ct/ {print $10}' <<<"$smart")"
+		[[ -n "${sectors}" ]] && sectors="$(colorIf "$sectors" '<' $REALLOCATED_SECTOR_WARN)" || sectors='.'
 	else
-		sect='.'
+		sectors='.'
 	fi
 	# output
-	out+="${disk##*/}|${status}|${powerOnTime}|${temp}|${cycle}|${sect}\n"
+	out+="${disk##*/}|${status}|${powerOnTime}|${temp}|${cycle}|${sectors}\n"
 done
 
 echo 'disks health:'
