@@ -7,7 +7,7 @@ motd Info generates a dynamic motd via shell scripts. It is easily configurable.
 - information is displayed with as little characters as possible while still easily readable
 - bad stand out more than good ones
 - dates are in [ISO-8601](https://en.wikipedia.org/wiki/ISO_8601)
-- times list the time zone
+- times specify the time zone
 
 ## Example
 
