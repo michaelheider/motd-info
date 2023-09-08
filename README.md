@@ -24,6 +24,7 @@ motd Info generates a dynamic motd via shell scripts. It is easily configurable.
 3. check what other motd scripts are in `/etc/update-motd.d/` and delete the unwanted ones (probably all)
 4. configure `config.txt` to change the layout
 5. configure widgets
+6. if using lastlogins widget (default): Disable sshd's last login prompt by setting the `PrintLastLog` flag to `no` in `/etc/ssh/sshd_config`. Be aware of the implications explained below.
 
 ### Widgets
 
@@ -38,7 +39,7 @@ If you want to use the lastlogin widget:
 - lastlogins shows a list of the N most recently logged in users. This does not necessarily include you.
   - This is because motd is user agnostic.
 - motd may be pregenerated and cached, hence the info may be stale.
-- Disable SSH's last login prompt by setting the `PrintLastLog` flag to `no` in `/etc/ssh/sshd_config`.
+- Disable sshd's last login prompt by setting the `PrintLastLog` flag to `no` in `/etc/ssh/sshd_config`.
 
 #### lastexec
 
