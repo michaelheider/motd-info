@@ -7,7 +7,7 @@ set -euo pipefail
 # Run it to see what it looks like.
 
 # config
-TIMEOUT=0.1 # seconds. Timeout to get public IPs, can be decimal. 0 disables the timeout.
+TIMEOUT=0.2 # seconds. Timeout to get public IPs, can be decimal. 0 disables the timeout.
 
 HELPERS=$(realpath "$(dirname "$0")/../helpers")
 # shellcheck source-path=../helpers
@@ -76,7 +76,7 @@ publicIp6=$(getPublicIp 6)
 echo -e "$LINE_UP$LINE_CLEAR$LINE_UP" >&2 # clear previous message
 
 # local IPs & interfaces
-localIps=$(ip -oneline addr show | awk '{print $2" "$4}' | grep -Ev " fe80:|^lo " || test $? = 1)
+localIps=$(ip -oneline addr show | awk '{print $2" "$4}' | sort -n | grep -Ev " fe80:|^lo " || test $? = 1)
 localIps=${localIps// /|}
 
 # assemble message (as table)
