@@ -3,11 +3,11 @@ set -euo pipefail
 
 # Print network information.
 # All local interafces and IPs, public IPv4 & IPv6, hostname.
-# It takes roughly 0.05s each to get the public IPv4 and IPv6.
+# It takes less than 0.05s each to get the public IPv4 and IPv6.
 # Run it to see what it looks like.
 
 # config
-TIMEOUT=0.5 # seconds. Timeout to get public IPs, can be decimal. 0 disables the timeout.
+TIMEOUT=0.1 # seconds. Timeout to get public IPs, can be decimal. 0 disables the timeout.
 
 HELPERS=$(realpath "$(dirname "$0")/../helpers")
 # shellcheck source-path=../helpers
@@ -22,11 +22,15 @@ getPublicIp() {
 	V=$1
 	case $V in
 	4)
-		RESOLVER='resolver1.opendns.com'
+		# use IP to save lookup time & circumvent possible DNS issues
+		# resolver1.opendns.com
+		RESOLVER='208.67.222.222'
 		RECORD=A
 		;;
 	6)
-		RESOLVER='resolver1.ipv6-sandbox.opendns.com'
+		# use IP to save lookup time & circumvent possible DNS issues
+		# dns.umbrella.com (could also use: resolver1.ipv6-sandbox.opendns.com)
+		RESOLVER='2620:119:35::35'
 		RECORD=AAAA
 		;;
 	esac
@@ -47,6 +51,7 @@ getPublicIp() {
 			;;
 		10)
 			# dig 10: internal error
+			# (includes could not resolve IP of resolver server if given by domain)
 			ip="${COLOR_INFO}IPv$V DNS failed${RESET}"
 			;;
 		*)
