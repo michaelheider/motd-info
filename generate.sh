@@ -17,7 +17,7 @@ done
 DIR=$(cd -P "$(dirname "$SOURCE")" >/dev/null 2>&1 && pwd)
 
 HELPERS="$DIR/helpers"
-CONFIG_PATH="$DIR/config.txt"
+CONFIG_PATH="$DIR/config.cfg"
 WIDGETS_PATH="$DIR/widgets"
 
 # shellcheck source-path=./helpers
