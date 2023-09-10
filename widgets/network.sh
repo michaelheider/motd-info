@@ -36,8 +36,12 @@ getPublicIp() {
 	esac
 
 	# myip.opendns.com: Query A or AAAA for your source address as seen by the resolver
-	if ip=$(timeout $TIMEOUT dig -"$V" +short 'myip.opendns.com' "$RECORD" "@$RESOLVER" 2>/dev/null); then
-		:
+	# NOTE: DNSSEC is not supported for myip.opendns.com (2023-09-10).
+	#       The returned record is dynamic, but they could also generate a dynamic signature.
+	if ip=$(timeout $TIMEOUT dig -"$V" +short +dnssec 'myip.opendns.com' "$RECORD" "@$RESOLVER" 2>/dev/null); then
+		# in case further results are returned, limit to first row
+		# this will matter if DNSSEC ever is enabled for myip.opendns.com
+		ip=$(head -n1 <<<"$ip")
 	else
 		status=$?
 		case $status in
@@ -72,7 +76,7 @@ publicIp6=$(getPublicIp 6)
 echo -e "$LINE_UP$LINE_CLEAR$LINE_UP" >&2 # clear previous message
 
 # local IPs & interfaces
-localIps=$(ip -oneline addr show | awk '{print $1" " $2" "$4}' | cut -c 4- | grep -Ev " fe80:|^lo " || test $? = 1)
+localIps=$(ip -oneline addr show | awk '{print $2" "$4}' | grep -Ev " fe80:|^lo " || test $? = 1)
 localIps=${localIps// /|}
 
 # assemble message (as table)
