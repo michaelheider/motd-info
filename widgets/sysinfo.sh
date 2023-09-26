@@ -18,8 +18,9 @@ processes="$(ps --ppid 2 -p 2 --deselect | wc -l)"
 load="$(cut -d' ' -f3 </proc/loadavg)"
 users="$(w -h | wc -l)"
 uptime="$(($(cut -d'.' -f1 </proc/uptime) / 3600 / 24))"
-mem="$(free -b | awk 'FNR == 2 {p=100*$3/$2} END{printf("%0.f",p)}')"
-swap="$(free -b | awk 'FNR == 3 {p=100*$3/$2} END{printf("%0.f",p)}')"
+mem="$(free -b | grep 'Mem' | awk '{ p=100*$3/$2; printf("%0.f",p) }')"
+# if there is no swap space, it ouputs '-'
+swap="$(free -b | grep 'Swap' | awk '{ if($2!=0) { p=100*$3/$2; printf("%0.f",p) } else { print "-" } }')"
 cores="$(grep -c '^processor' /proc/cpuinfo)"
 cpu="$("${HELPERS}/cpu.sh")"
 if [[ -f '/sys/class/thermal/thermal_zone0/temp' ]]; then
@@ -30,7 +31,9 @@ fi
 
 cpu=$(colorIf "${cpu}" '<' "${CPU_WARN}" '%')
 mem=$(colorIf "${mem}" '<' "${MEM_WARN}" '%')
-swap=$(colorIf "${swap}" '<' "${SWAP_WARN}" '%')
+if [[ $swap != '-' ]]; then
+	swap=$(colorIf "${swap}" '<' "${SWAP_WARN}" '%')
+fi
 temp=$(colorIf "${temp}" '<' "${TEMP_WARN}" '°C')
 load=$(colorIf "${load}" '<' "$cores")
 
