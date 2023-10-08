@@ -6,8 +6,8 @@ set -euo pipefail
 
 # config
 COLUMNS=2 # fills row-major
-SERVICES_REAL_NAMES=('rsyslog' 'logrotate.timer' 'cron' 'networking' 'sshd' 'apache2')
-SERVICES_DISPLAY_NAMES=('syslog' 'logrotate' 'cron' 'network' 'sshd' 'apache')
+SERVICES_REAL_NAMES=('systemd-journald' 'logrotate.timer' 'cron' 'networking' 'sshd')
+SERVICES_DISPLAY_NAMES=('journald' 'logrotate' 'cron' 'network' 'sshd')
 
 HELPERS=$(realpath "$(dirname "$0")/../helpers")
 # shellcheck source-path=../helpers
