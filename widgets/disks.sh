@@ -59,8 +59,8 @@ for disk in "${disks[@]}"; do
 	else
 		powerOnTimeH="$(awk -- '/Power On Hours/ {print $NF}' <<<"$smart")"
 	fi
-	powerOnTimeY="$(bc -l <<<"scale=1; $((powerOnTimeH / 24))/365")"
-	powerOnTimeY=$(printf '%3.1f\n' "$powerOnTimeY") # ensure leading 0
+	powerOnTimeY="$(bc -l <<<"$powerOnTimeH/24/365")"
+	powerOnTimeY=$(printf '%3.1f\n' "$powerOnTimeY") # ensure leading 0, one decimal digit
 	if [ "$(bc -l <<<"$powerOnTimeY < $POWER_ON_TIME_WARN")" -eq 1 ]; then
 		color=$COLOR_GOOD
 	else
