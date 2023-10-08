@@ -24,10 +24,12 @@ motd Info follows the following principles:
    (location as per the [Filesystem Hierarchy Standard](https://refspecs.linuxfoundation.org/FHS_3.0/fhs/index.html))
 2. create a symlink to the generate script in the `update-motd.d` directory:  
    `sudo ln -s /usr/local/src/motd-info/generate.sh /etc/update-motd.d/09-motd-info`
-3. check what other motd scripts are in `/etc/update-motd.d/` and delete the unwanted ones (probably all)
-4. configure `config.txt` to change the layout
-5. configure widgets
-6. if using lastlogins widget (default): Disable sshd's last login prompt by setting the `PrintLastLog` flag to `no` in `/etc/ssh/sshd_config`. Be aware of the implications explained below.
+3. check the static part of the motd in `/etc/motd`, remove unwanted parts (probably everyting, i.e. empty (not delete) the file)
+4. check what other motd scripts are in `/etc/update-motd.d/` and delete the unwanted ones (probably all)
+5. configure `config.txt` to change the layout
+6. configure widgets
+7. if using lastlogins widget (default): Disable sshd's last login prompt by setting the `PrintLastLog` flag to `no` in `/etc/ssh/sshd_config`. (Detailed implications explained below.)
+8. (optional) add a link into your home directory to always have access to the info: `ln -s /usr/local/src/motd-info/generate.sh ~/motd-info`
 
 ### Widgets
 
