@@ -59,16 +59,21 @@ for disk in "${disks[@]}"; do
 	else
 		powerOnTimeH="$(awk -- '/Power On Hours/ {print $NF}' <<<"$smart")"
 	fi
-	powerOnTimeY="$(bc -l <<<"$powerOnTimeH/24/365")"
-	powerOnTimeY=$(printf '%3.1f\n' "$powerOnTimeY") # ensure leading 0, one decimal digit
-	if [ "$(bc -l <<<"$powerOnTimeY < $POWER_ON_TIME_WARN")" -eq 1 ]; then
-		color=$COLOR_GOOD
+	powerOnTimeH=${powerOnTimeH/"’"/} # remove thousands separator U+2019 if present
+	if [ -n "$powerOnTimeH" ]; then
+		powerOnTimeY="$(bc -l <<<"$powerOnTimeH/24/365")"
+		powerOnTimeY=$(printf '%3.1f\n' "$powerOnTimeY") # ensure leading 0, one decimal digit
+		if [ "$(bc -l <<<"$powerOnTimeY < $POWER_ON_TIME_WARN")" -eq 1 ]; then
+			color=$COLOR_GOOD
+		else
+			color=$COLOR_BAD
+		fi
+		powerOnTime="${color}${powerOnTimeY}y${RESET}"
 	else
-		color=$COLOR_BAD
+		powerOnTime='.'
 	fi
-	powerOnTime="${color}${powerOnTimeY}y${RESET}"
+	# temp
 	if [ $nvme -eq 0 ]; then
-		# temp
 		t1="$(awk -- '/Temperature_Celsius/ {print $10}' <<<"$smart")"
 		t2="$(awk -- '/Airflow_Temperature_Cel/ {print $10}' <<<"$smart")"
 		temp=$((t1 > t2 ? t1 : t2)) # in case both temps are valid, take higher
