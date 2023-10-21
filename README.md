@@ -29,7 +29,7 @@ motd Info follows the following principles:
 5. configure `config.txt` to change the layout
 6. configure widgets
 7. if using lastlogins widget (default):
-    - Disable sshd's last login prompt by setting the `PrintLastLog` flag to `no` in `/etc/ssh/sshd_config` (detailed implications explained below).
+    - Disable sshd's last login prompt by setting the `PrintLastLog` flag to `no` in `/etc/ssh/sshd_config` (detailed implications explained below). Restart sshd with `sudo systemctl restart sshd`.
     - Unfortunately, there is no elegant way to remove the last login prompt on physical/virtual terminals (`~/.hushlogin` also hides motd).
 8. (optional) add a link into your home directory to always have access to the info: `ln -s /usr/local/src/motd-info/generate.sh ~/motd-info`
 
