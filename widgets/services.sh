@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-# Print status of services.
+# Print status of overall system, any failed processes and number of zombie processes, if any.
 # Run it to see what it looks like.
 
 HELPERS=$(realpath "$(dirname "$0")/../helpers")
