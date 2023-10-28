@@ -23,7 +23,7 @@ mem="$(free -b | grep 'Mem' | awk '{ p=100*$3/$2; printf("%0.f",p) }')"
 # if there is no swap space, it ouputs '-'
 swap="$(free -b | grep 'Swap' | awk '{ if($2!=0) { p=100*$3/$2; printf("%0.f",p) } else { print "-" } }')"
 cores="$(grep -c '^processor' /proc/cpuinfo)"
-read -r -a cpuStats <<<"$("${HELPERS}/cpuStats.sh")"
+read -r -a cpuStats <<<"$("${HELPERS}/cpu-stats.sh")"
 cpuUsage=${cpuStats[0]}
 ioDelay=${cpuStats[1]}
 if [[ -f '/sys/class/thermal/thermal_zone0/temp' ]]; then
