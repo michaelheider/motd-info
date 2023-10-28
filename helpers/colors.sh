@@ -47,7 +47,7 @@ colorIf() {
 	fi
 }
 
-# example use: colorIfCustom '2' '<' '5' 'r1' 'r2'adamshand
+# example use: colorIfCustom '2' '<' '5' 'r1' 'r2'
 colorIfCustom() {
 	if (( "${1%%.*}" "$2" "${3%%.*}" )); then
 		echo "${COLOR_GOOD}${4}${RESET}"
@@ -68,8 +68,8 @@ colorMatch() {
 # example use: colorMatchCustom 'abc' 'def' 'r1' 'r2'
 colorMatchCustom() {
 	if [[ "${1%%.*}" = "${2%%.*}" ]]; then
-		echo "${COLOR_GOOD}${3}${RESET}"
+		echo "${COLOR_GOOD}$3${RESET}"
 	else
-		echo "${COLOR_BAD}${4}${RESET}"
+		echo "${COLOR_BAD}$4${RESET}"
 	fi
 }
