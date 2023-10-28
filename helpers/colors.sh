@@ -50,9 +50,9 @@ colorIf() {
 # example use: colorIfCustom '2' '<' '5' 'r1' 'r2'
 colorIfCustom() {
 	if (( "${1%%.*}" "$2" "${3%%.*}" )); then
-		echo "${COLOR_GOOD}${4}${RESET}"
+		echo "${COLOR_GOOD}$4${RESET}"
 	else
-		echo "${COLOR_BAD}${5}${RESET}"
+		echo "${COLOR_BAD}$5${RESET}"
 	fi
 }
 
