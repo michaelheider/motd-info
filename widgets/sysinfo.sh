@@ -17,7 +17,7 @@ source "${HELPERS}/colors.sh"
 
 processes="$(ps --ppid 2 -p 2 --deselect | wc -l)"
 load="$(cut -d' ' -f1 </proc/loadavg)"
-users="$(w -h | awk '{ print $1 }' | sort | uniq)"
+users="$(w -h | awk '{ print $1 }' | sort | uniq | wc -l)"
 uptime="$(($(cut -d'.' -f1 </proc/uptime) / 3600 / 24))"
 mem="$(free -b | grep 'Mem' | awk '{ p=100*$3/$2; printf("%0.f",p) }')"
 # if there is no swap space, it ouputs '-'
