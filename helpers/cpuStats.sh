@@ -19,7 +19,7 @@ cpuStats() {
 }
 
 read -r -a start <<<"$(cpuStats)"
-echo "measuring CPU load..." >&2
+echo "measuring CPU stats..." >&2
 sleep 0.5 # making this longer gives a better average
 echo -e "$LINE_UP$LINE_CLEAR$LINE_UP" >&2 # clear previous message
 read -r -a end <<<"$(cpuStats)"
