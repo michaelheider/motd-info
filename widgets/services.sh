@@ -20,11 +20,17 @@ findInfo() {
 	echo "$value"
 }
 
+# overall system state
 systemState=$(findInfo 'SystemState')
 systemState=$(colorMatch "$systemState" 'running')
 
+# nr of zombie processes
+zombies=$(ps axo pid=,stat= | awk '$2~/^Z/ { print }' | wc -l)
+
+# count failed
 failedUnitsN=$(findInfo 'NFailedUnits')
 
+# find failed or otherwise not active
 failedTxt=$(systemctl list-units)
 failedTxt=$(tail -n +2 <<<"$failedTxt")
 failedTxt=$(head -n -5 <<<"$failedTxt")
@@ -49,7 +55,10 @@ done <<<"$failedTxt"
 out=''
 out+="system $systemState"
 if ((failedUnitsN > 0)); then
-	out+=", $failedUnitsN failed"
+	out+=", $failedUnitsN errors"
+fi
+if ((zombies > 0)); then
+	out+=", $COLOR_INFO$zombies zombies$RESET"
 fi
 
 echo -e "$out"
