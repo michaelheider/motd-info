@@ -1,0 +1,19 @@
+system resources:                         network:
+  CPU use     [0;32m2%[0m  IO delay    [0;32m0%[0m            wlo1  192.168.1.101/24
+  memory     [1;31m85%[0m  swap       [0;32m13%[0m            wlo1  1234:1234:1234:1234:1234:1234:1234:1234/64
+  processes  220  sys load  [0;32m0.82[0m            wlo1  1234:1234:1234:1234:1234:1234:1234:1234/64
+  uptime      0d  temp      [0;32m66°C[0m            pub   123.123.123.123
+  users now    2                            pub   1234:1234:1234:1234:1234:1234:1234:1234
+                                            host  my-laptop
+partitions usage:                         
+     Size  Use%                           packages:
+  /  233G   [1;31m91%[0m                             [0;33m12 upgrades[0m, [0;32m0 security[0m
+                                          
+disks health:                             OS:
+           Chck  Pwr   T     LCyc  RSc      distro:  Ubuntu 22.04 jammy
+  nvme0n1  [0;32mpass[0m  [0;32m0.1y[0m  [0;32m46°C[0m  .     .        kernel:  Linux 6.2.0-35-generic
+                                            arch:    x86_64
+system [1;31mdegraded[0m, 1 errors, [0;33m1 zombies[0m      
+  systemd-networkd-wait-online: [1;31mfailed[0m    last logins (CEST):
+                                            michael  2023-09-26 09:59  tty3
+
