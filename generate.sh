@@ -23,10 +23,25 @@ WIDGETS_PATH="$DIR/widgets"
 # shellcheck source-path=./helpers
 source "${HELPERS}/colors.sh"
 
-cols=$(grep '^col=' "$CONFIG_PATH" | sed 's/.*col=//')
+cols=$(grep '^columns=' "$CONFIG_PATH" | sed 's/.*columns=//')
+
+# sanity checks
+if [ "$cols" == '' ]; then
+	echo -e "${COLOR_BAD}No \`columns=N\` line found in config.$RESET" 1>&2
+	exit 1
+fi
+numberRegex='^[+-]?[[:digit:]]+$'
+if ! [[ $cols =~ $numberRegex ]]; then
+	echo -e "${COLOR_BAD}Columns must be an integer, \`$cols\` given.$RESET" 1>&2
+	exit 1
+fi
+if ((cols < 1)); then
+	echo -e "${COLOR_BAD}Nr. of columns must be at >= 1, $cols given.$RESET" 1>&2
+	exit 1
+fi
 
 # execute widgets
-LAYOUT=$(grep --invert-match -P '^\s*#|^\s*$|col=' "$CONFIG_PATH")
+LAYOUT=$(grep --invert-match -P '^\s*#|^\s*$|columns=' "$CONFIG_PATH")
 f=()
 for i in $(seq 1 "$cols"); do
 	f[i]=""
