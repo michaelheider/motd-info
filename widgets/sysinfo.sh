@@ -5,11 +5,11 @@ set -euo pipefail
 # Run it to see what it looks like.
 
 # config: cutoff values
-CPU_WARN=30  # %
-IO_DELAY_WARN=30  # % (percent of time CPU is explicitly waiting for IO)
-MEM_WARN=50  # %
-SWAP_WARN=50 # %
-TEMP_WARN=60 # °C
+CPU_WARN=50      # %
+IO_DELAY_WARN=30 # % (percent of time CPU is explicitly waiting for IO)
+MEM_WARN=75      # %
+SWAP_WARN=50     # %
+TEMP_WARN=80     # °C
 
 HELPERS=$(realpath "$(dirname "$0")/../helpers")
 # shellcheck source-path=../helpers
