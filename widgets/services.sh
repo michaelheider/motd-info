@@ -62,4 +62,4 @@ if ((zombies > 0)); then
 fi
 
 echo -e "$out"
-echo -e "${failed}" | sed -e 's/^/  /'
+echo -en "${failed}" | sed -e 's/^/  /'
