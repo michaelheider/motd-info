@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Print network information.
-# All local interafces and IPs, public IPv4 & IPv6, hostname.
+# All local interafces with network IPs, public IPv4 & IPv6, hostname.
 # It takes less than 0.05s each to get the public IPv4 and IPv6.
 # Run it to see what it looks like.
 
