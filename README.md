@@ -22,7 +22,7 @@ motd Info follows the following principles:
    Perhaps exclude `.git` and similar.
    The target folder does not have to be owned by root.
    (Target location as per the [Filesystem Hierarchy Standard](https://refspecs.linuxfoundation.org/FHS_3.0/fhs/index.html).)
-   - SCP to server: `rsync -a --info=progress2 --exclude={".git",".gitignore",".shellcheckrc","example.png"} . user@server:/usr/local/src/motd-info`
+   - SCP to server: `rsync -a --delete --exclude={".git",".gitignore",".shellcheckrc","example.png"} --info=progress2 . user@server:/usr/local/src/motd-info`
 2. create a symlink to the `generate.sh` script in the `update-motd.d` directory:  
    `sudo ln -s /usr/local/src/motd-info/generate.sh /etc/update-motd.d/09-motd-info`
 3. check the static part of the motd in `/etc/motd`, remove unwanted parts (probably everyting, i.e. empty (not delete) the file)
