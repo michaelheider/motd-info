@@ -7,7 +7,7 @@ set -euo pipefail
 # Run it to see what it looks like.
 
 # config
-TIMEOUT=0.2 # seconds. Timeout to get public IPs, can be decimal. 0 disables the timeout.
+TIMEOUT=0.4 # seconds. Timeout to get public IPs, can be decimal. 0 disables the timeout.
 
 HELPERS=$(realpath "$(dirname "$0")/../helpers")
 # shellcheck source-path=../helpers
