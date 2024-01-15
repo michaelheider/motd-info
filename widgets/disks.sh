@@ -7,7 +7,7 @@ set -euo pipefail
 # direct (=no advacned options necessary) SMART support.
 
 # config
-POWER_ON_TIME_WARN=2.0    # years, decimal
+POWER_ON_TIME_WARN=3.0    # years, decimal
 TEMP_WARN=60              # °C
 LOAD_CYCLE_WARN=500       # x1k cycles
 REALLOCATED_SECTOR_WARN=1 # sectors
