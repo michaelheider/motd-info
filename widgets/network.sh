@@ -69,7 +69,7 @@ getPublicIp() {
 	echo "$ip"
 }
 
-# oublic IPs
+# public IPs
 echo "get public IPs..." >&2
 publicIp4=$(getPublicIp 4)
 publicIp6=$(getPublicIp 6)
