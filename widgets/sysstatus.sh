@@ -33,18 +33,17 @@ failedUnitsN=$(findInfo 'NFailedUnits')
 # find failed or otherwise not active
 failedTxt=$(systemctl list-units)
 failedTxt=$(tail -n +2 <<<"$failedTxt")
-failedTxt=$(head -n -5 <<<"$failedTxt")
+failedTxt=$(head -n -6 <<<"$failedTxt")
 failed=''
-while read -r line; do
-	# note: `-` must be last in the selector `[]` to not be treated as range.
-	# For some reason, excaping with `\` does not work.
-	# regex='^[● ] ([[:alnum:]._-]+) +([[:alpha:]]+) +([[:alpha:]]+) .*$'
-	# regex='^([?![:space:]]+) +([[:alpha:]]+) +([[:alpha:]]+) .*$'
-	regex='^(● )?([^[:space:]]+) +([[:alpha:]]+) +([[:alpha:]]+) .*$'
+while IFS='' read -r line; do
+	# sample line (incl. header that is cut off):
+	#   UNIT                        LOAD   ACTIVE     SUB          DESCRIPTION
+	#   systemd-journald.service    loaded active     running      Journal Service
+	regex='^((● )|  )([[:alnum:][:punct:]]+) +([[:alpha:]]+) +([[:alpha:]]+) +([[:alpha:]]+) .*$'
 	[[ "$line" =~ $regex ]]
-	name=${BASH_REMATCH[2]}
+	name=${BASH_REMATCH[3]}
 	name="${name%.*}" # remove '.service' and similar
-	state=${BASH_REMATCH[4]}
+	state=${BASH_REMATCH[5]}
 	if [ "$state" == 'failed' ]; then
 		failed+="$name: $COLOR_BAD$state$RESET\n"
 	elif [ "$state" != 'active' ]; then
