@@ -30,10 +30,10 @@ zombies=$(ps axo pid=,stat= | awk '$2~/^Z/ { print }' | wc -l)
 # count failed
 failedUnitsN=$(findInfo 'NFailedUnits')
 
-# find failed or otherwise not active
-failedTxt=$(systemctl list-units)
-failedTxt=$(tail -n +2 <<<"$failedTxt")
-failedTxt=$(head -n -6 <<<"$failedTxt")
+# find failed or otherwise not active units
+unitsTxt=$(systemctl list-units)
+unitsTxt=$(tail -n +2 <<<"$unitsTxt")
+unitsTxt=$(head -n -6 <<<"$unitsTxt")
 failed=''
 while IFS='' read -r line; do
 	# sample line (incl. header that is cut off):
@@ -49,7 +49,7 @@ while IFS='' read -r line; do
 	elif [ "$state" != 'active' ]; then
 		failed+="$name: $COLOR_INFO$state$RESET\n"
 	fi
-done <<<"$failedTxt"
+done <<<"$unitsTxt"
 
 out=''
 out+="system $systemState"
