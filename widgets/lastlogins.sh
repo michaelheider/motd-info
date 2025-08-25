@@ -17,9 +17,28 @@ HELPERS=$(realpath "$(dirname "$0")/../helpers")
 # shellcheck source-path=../helpers
 source "${HELPERS}/colors.sh"
 
-info=$(lastlog | tail -n +2 | { grep --invert-match --fixed-strings '**Never logged in**' || test $? = 1; })
+# find OS and version
+source /etc/os-release
+# VERSION_ID might contain quotes, strip them
+osVersion=${VERSION_ID//\"/}
+osVersion=${osVersion%%.*}  # in case it's like "24.04"
 
-# if there are no last logins at all, skip
+# get appropriate command based on OS version
+if { [[ "$ID" == "debian" ]] && [[ "$osVersion" -le 12 ]]; } || \
+   { [[ "$ID" == "ubuntu" ]] && [[ "$osVersion" -le 24 ]]; }; then
+    logCmd="lastlog"
+elif { [[ "$ID" == "debian" ]] && [[ "$osVersion" -ge 13 ]]; } || \
+     { [[ "$ID" == "ubuntu" ]] && [[ "$osVersion" -ge 25 ]]; }; then
+	if ! "${HELPERS}/cmd-exists.sh" lastlog2; then
+		echo -e "${COLOR_INFO}lastlog2 not installed${RESET}"
+		exit 0
+	fi
+    logCmd="lastlog2"
+fi
+
+info=$($logCmd | tail -n +2 | { grep --invert-match --fixed-strings '**Never logged in**' || test $? = 1; })
+
+# handle case with no last logins at all
 if [ -z "$info" ]; then
 	echo -e "${COLOR_INFO}no last logins${RESET}"
 	exit 0
