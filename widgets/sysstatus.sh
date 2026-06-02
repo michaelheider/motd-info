@@ -32,8 +32,8 @@ failedUnitsN=$(findInfo 'NFailedUnits')
 
 # find failed or otherwise not active units
 unitsTxt=$(systemctl list-units)
-unitsTxt=$(tail -n +2 <<<"$unitsTxt")
-unitsTxt=$(head -n -6 <<<"$unitsTxt")
+unitsTxt=$(tail -n +2 <<<"$unitsTxt")       # remove top line (header)
+unitsTxt=$(sed -e '/^$/,$d' <<<"$unitsTxt") # remove everything after first empty line (footer)
 failed=''
 while IFS='' read -r line; do
 	# sample lines (incl. header that is cut off):
@@ -41,7 +41,7 @@ while IFS='' read -r line; do
 	#   systemd-journald.service    loaded    active  running  Journal Service
 	# ● wtmpdb-rotate.timer         not-found failed  failed   wtmpdb-rotate.timer
 	#   -.mount                     loaded    active  mounted  Root Mount
-	regex='^((● )|  )([[:alnum:][:punct:]]+) +([[:alpha:]-]+) +([[:alpha:]]+) +([[:alpha:]]+) .*$'
+	regex='^((● )|  )([[:alnum:][:punct:]]+) +([[:alpha:]\-]+) +([[:alpha:]]+) +([[:alpha:]]+) .*$'
 	[[ "$line" =~ $regex ]]
 	name=${BASH_REMATCH[3]}
 	name="${name%.*}" # remove '.service' and similar
