@@ -36,10 +36,12 @@ unitsTxt=$(tail -n +2 <<<"$unitsTxt")
 unitsTxt=$(head -n -6 <<<"$unitsTxt")
 failed=''
 while IFS='' read -r line; do
-	# sample line (incl. header that is cut off):
-	#   UNIT                        LOAD   ACTIVE     SUB          DESCRIPTION
-	#   systemd-journald.service    loaded active     running      Journal Service
-	regex='^((● )|  )([[:alnum:][:punct:]]+) +([[:alpha:]]+) +([[:alpha:]]+) +([[:alpha:]]+) .*$'
+	# sample lines (incl. header that is cut off):
+	#   UNIT                        LOAD      ACTIVE  SUB      DESCRIPTION
+	#   systemd-journald.service    loaded    active  running  Journal Service
+	# ● wtmpdb-rotate.timer         not-found failed  failed   wtmpdb-rotate.timer
+	#   -.mount                     loaded    active  mounted  Root Mount
+	regex='^((● )|  )([[:alnum:][:punct:]]+) +([[:alpha:]-]+) +([[:alpha:]]+) +([[:alpha:]]+) .*$'
 	[[ "$line" =~ $regex ]]
 	name=${BASH_REMATCH[3]}
 	name="${name%.*}" # remove '.service' and similar
